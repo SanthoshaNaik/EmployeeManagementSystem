@@ -1,0 +1,51 @@
+@if (isOpen) {
+  <div class="sidebar-backdrop" (click)="close()"></div>
+}
+
+<aside class="sidebar" [class.open]="isOpen">
+
+  <div class="sidebar-top">
+    <div class="brand">
+      <h2>DoctorCare</h2>
+      <p>Management System</p>
+    </div>
+    <button type="button" class="sidebar-close-btn" (click)="close()" aria-label="Close navigation menu">&times;</button>
+  </div>
+
+  <nav class="navigation">
+
+    <a
+      routerLink="/dashboard"
+      routerLinkActive="active"
+      class="nav-link"
+      (click)="close()"
+    >
+      Dashboard
+    </a>
+
+    <a
+      routerLink="/doctors"
+      routerLinkActive="active"
+      [routerLinkActiveOptions]="{ exact: true }"
+      class="nav-link"
+      (click)="close()"
+    >
+      Doctors
+    </a>
+
+    <a
+      routerLink="/doctors/add"
+      routerLinkActive="active"
+      class="nav-link"
+      (click)="close()"
+    >
+      + Add Doctor
+    </a>
+
+  </nav>
+
+  <div class="sidebar-footer">
+    Doctor Management
+  </div>
+
+</aside>

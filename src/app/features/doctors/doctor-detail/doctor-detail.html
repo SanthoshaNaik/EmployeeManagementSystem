@@ -1,0 +1,105 @@
+<section class="detail-page">
+
+  <div class="page-header">
+    <div>
+      <h1>Doctor Profile</h1>
+      <p>View detailed information and schedule.</p>
+    </div>
+
+    <a routerLink="/doctors" class="back-button">
+      &larr; Back to Doctors
+    </a>
+  </div>
+
+  @if (isLoading) {
+  <div class="status-card">
+    Loading doctor details...
+  </div>
+  } @else if (errorMessage) {
+  <div class="status-card error-card">
+    <p>{{ errorMessage }}</p>
+    <a routerLink="/doctors" class="action-btn back-btn">Return to Doctor List</a>
+  </div>
+  } @else if (doctor) {
+  <div class="profile-card">
+    <div class="profile-header">
+      <div class="doctor-identity">
+        <div class="doctor-avatar">{{ doctor.name.slice(0, 2).toUpperCase() }}</div>
+        <div>
+          <h2>{{ doctor.name }}</h2>
+          <span class="specialization-tag">{{ doctor.specialization }}</span>
+        </div>
+      </div>
+
+      <span class="status-badge"
+        [class.available]="doctor.status === 'Available'"
+        [class.on-leave]="doctor.status === 'On Leave'"
+        [class.unavailable]="doctor.status === 'Unavailable'">
+        {{ doctor.status }}
+      </span>
+    </div>
+
+    <div class="profile-sections">
+
+      <div class="info-group">
+        <h3>Contact & Credentials</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Qualification</span>
+            <span class="value">{{ doctor.qualification }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Experience</span>
+            <span class="value">{{ doctor.experience }} Years</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Consultation Fee</span>
+            <span class="value">₹{{ doctor.consultationFee }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Email Address</span>
+            <span class="value">{{ doctor.email }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Phone Number</span>
+            <span class="value">{{ doctor.phone }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="info-group">
+        <h3>Schedule & Availability</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Working Hours</span>
+            <span class="value">{{ doctor.workingHours }}</span>
+          </div>
+          <div class="info-item full-row">
+            <span class="label">Available Days</span>
+            <div class="days-badges">
+              @for (day of doctor.availableDays; track day) {
+              <span class="day-badge">{{ day }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="profile-actions">
+      <a [routerLink]="['/doctors/edit', doctor.id]" class="btn edit-btn">
+        Edit Profile
+      </a>
+      <button type="button" class="btn delete-btn" (click)="deleteDoctor()">
+        Delete Doctor
+      </button>
+      <a routerLink="/doctors" class="btn secondary-btn">
+        Back to List
+      </a>
+    </div>
+
+  </div>
+  }
+
+</section>

@@ -1,0 +1,292 @@
+.dashboard {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.page-title {
+  margin-bottom: 24px;
+}
+
+.page-title h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.page-title p {
+  color: #6B6B6B;
+  margin-top: 6px;
+  margin-bottom: 0;
+  font-size: 14px;
+}
+
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #fde7e3;
+  border: 1px solid #f1d0ca;
+  color: #b52d1b;
+  padding: 12px 18px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.retry-btn {
+  background: #b52d1b;
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.stat-card {
+  padding: 20px;
+  background: #FFFFFF;
+  border: 1px solid #E5DED2;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.stat-card p {
+  margin: 0;
+  color: #666666;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.stat-card h2 {
+  margin: 12px 0 6px;
+  color: #046A38;
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.stat-card span {
+  color: #777777;
+  font-size: 12px;
+}
+
+.welcome-card {
+  margin-top: 24px;
+  padding: 24px 28px;
+  background: #FFFFFF;
+  border: 1px solid #E5DED2;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.welcome-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.welcome-card h2 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  color: #046A38;
+  font-size: 20px;
+}
+
+.welcome-card p {
+  margin-bottom: 0;
+  line-height: 1.6;
+  color: #555555;
+  max-width: 650px;
+  font-size: 14px;
+}
+
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.primary-btn {
+  background: #046A38;
+  color: #ffffff;
+}
+
+.primary-btn:hover {
+  background: #034d29;
+}
+
+.secondary-btn {
+  background: #faf8f4;
+  border: 1px solid #E5DED2;
+  color: #252525;
+}
+
+.secondary-btn:hover {
+  background: #ede6da;
+}
+
+.recent-card {
+  margin-top: 24px;
+  padding: 22px 24px;
+  background: #FFFFFF;
+  border: 1px solid #E5DED2;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.recent-header h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #252525;
+}
+
+.view-all-link {
+  color: #046A38;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.view-all-link:hover {
+  text-decoration: underline;
+}
+
+.recent-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.doctor-badge-card {
+  padding: 14px 16px;
+  border: 1px solid #E5DED2;
+  border-radius: 8px;
+  background: #faf8f4;
+}
+
+.doctor-name {
+  font-weight: 600;
+  font-size: 14px;
+  color: #252525;
+  margin-bottom: 4px;
+}
+
+.doctor-specialty {
+  font-size: 12px;
+  color: #666666;
+  margin-bottom: 10px;
+}
+
+.status-tag {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.available {
+  background: #e3f4e9;
+  color: #046a38;
+}
+
+.on-leave {
+  background: #fff0d9;
+  color: #8b5700;
+}
+
+.unavailable {
+  background: #fde7e3;
+  color: #b52d1b;
+}
+
+/* Tablet Media Queries */
+@media (max-width: 1024px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .recent-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Mobile Media Queries (<= 640px) */
+@media (max-width: 640px) {
+  .page-title h1 {
+    font-size: 22px;
+  }
+
+  .welcome-card {
+    padding: 18px;
+  }
+
+  .welcome-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .action-btn {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .recent-card {
+    padding: 18px 16px;
+  }
+
+  .recent-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Small phone (<= 420px) */
+@media (max-width: 420px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .stat-card h2 {
+    font-size: 24px;
+  }
+}

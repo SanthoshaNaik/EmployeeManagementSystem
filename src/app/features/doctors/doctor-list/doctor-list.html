@@ -1,0 +1,204 @@
+<section class="doctor-page">
+
+    <div class="page-header">
+        <div>
+            <h1>Doctors</h1>
+            <p>Manage doctor profiles and availability.</p>
+        </div>
+
+        <a routerLink="/doctors/add" class="add-button">
+            + Add Doctor
+        </a>
+    </div>
+
+    @if (successMessage) {
+    <div class="success-banner" role="status">
+        <div class="banner-content">
+            <span class="banner-icon">&#10003;</span>
+            <span>{{ successMessage }}</span>
+        </div>
+        <button type="button" class="close-banner" (click)="successMessage = ''" aria-label="Dismiss message">&times;</button>
+    </div>
+    }
+
+    <div class="doctor-card">
+
+        <div class="filter-section">
+
+            <input type="text" placeholder="Search by name, email or specialization..." [(ngModel)]="searchText"
+                class="search-input" />
+
+            <select [(ngModel)]="selectedSpecialization" class="filter-select">
+                <option value="">All Specializations</option>
+
+                @for (specialization of specializations; track specialization) {
+                <option [value]="specialization">
+                    {{ specialization }}
+                </option>
+                }
+            </select>
+
+            <select [(ngModel)]="selectedStatus" class="filter-select">
+                <option value="">All Statuses</option>
+                <option value="Available">Available</option>
+                <option value="On Leave">On Leave</option>
+                <option value="Unavailable">Unavailable</option>
+            </select>
+
+        </div>
+
+        <div class="table-wrapper">
+
+            @if (isLoading) {
+            <div class="message">
+                Loading doctors...
+            </div>
+            } @else if (errorMessage) {
+            <div class="message error-message">
+                {{ errorMessage }}
+
+                <button type="button" class="retry-button" (click)="loadDoctors()">
+                    Retry
+                </button>
+            </div>
+            } @else {
+            <table>
+                <thead>
+                    <tr>
+                        <th>Doctor</th>
+                        <th>Specialization</th>
+                        <th>Experience</th>
+                        <th>Consultation Fee</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @for (doctor of filteredDoctors; track doctor.id) {
+                    <tr>
+                        <td>
+                            <div class="doctor-info">
+                                <strong>{{ doctor.name }}</strong>
+                                <span>{{ doctor.email }}</span>
+                            </div>
+                        </td>
+
+                        <td>{{ doctor.specialization }}</td>
+
+                        <td>{{ doctor.experience }} years</td>
+
+                        <td>₹{{ doctor.consultationFee }}</td>
+
+                        <td>
+                            <span class="status" [class.available]="doctor.status === 'Available'"
+                                [class.on-leave]="doctor.status === 'On Leave'"
+                                [class.unavailable]="doctor.status === 'Unavailable'">
+                                {{ doctor.status }}
+                            </span>
+                        </td>
+
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="view-button" (click)="viewDoctor(doctor)">
+                                    View
+                                </button>
+
+                                <a class="edit-btn" [routerLink]="['/doctors/edit', doctor.id]">
+                                    Edit
+                                </a>
+
+                                <button type="button" class="delete-button" (click)="deleteDoctor(doctor)" [disabled]="deletingDoctorId === doctor.id">
+                                    {{ deletingDoctorId === doctor.id ? 'Deleting...' : 'Delete' }}
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    } @empty {
+                    <tr>
+                        <td colspan="6" class="empty-message">
+                            No doctors found.
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            }
+
+        </div>
+
+        <div class="table-footer">
+            Showing {{ filteredDoctors.length }} doctors
+        </div>
+
+    </div>
+
+    @if (selectedDoctor) {
+    <div class="modal-backdrop" (click)="closeViewModal()">
+        <div class="modal-card" (click)="$event.stopPropagation()">
+            <div class="modal-header">
+                <div>
+                    <h2>{{ selectedDoctor.name }}</h2>
+                    <span class="status"
+                        [class.available]="selectedDoctor.status === 'Available'"
+                        [class.on-leave]="selectedDoctor.status === 'On Leave'"
+                        [class.unavailable]="selectedDoctor.status === 'Unavailable'">
+                        {{ selectedDoctor.status }}
+                    </span>
+                </div>
+                <button type="button" class="close-modal-btn" (click)="closeViewModal()" aria-label="Close modal">&times;</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="detail-row">
+                    <span class="detail-label">Specialization</span>
+                    <span class="detail-value">{{ selectedDoctor.specialization }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Qualification</span>
+                    <span class="detail-value">{{ selectedDoctor.qualification }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Experience</span>
+                    <span class="detail-value">{{ selectedDoctor.experience }} years</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Consultation Fee</span>
+                    <span class="detail-value">₹{{ selectedDoctor.consultationFee }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Email</span>
+                    <span class="detail-value">{{ selectedDoctor.email }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Phone</span>
+                    <span class="detail-value">{{ selectedDoctor.phone }}</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Working Hours</span>
+                    <span class="detail-value">{{ selectedDoctor.workingHours }}</span>
+                </div>
+                <div class="detail-row full-width">
+                    <span class="detail-label">Available Days</span>
+                    <div class="days-badges">
+                        @for (day of selectedDoctor.availableDays; track day) {
+                        <span class="day-badge">{{ day }}</span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <a class="edit-btn" [routerLink]="['/doctors/edit', selectedDoctor.id]" (click)="closeViewModal()">
+                    Edit Doctor
+                </a>
+                <button type="button" class="cancel-modal-btn" (click)="closeViewModal()">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+</section>
+

@@ -1,12 +1,23 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Sidebar } from './shared/components/sidebar/sidebar';
+import { Navbar } from './shared/components/navbar/navbar';
 
 @Component({
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Sidebar, Navbar],
   selector: 'app-root',
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
 export class App {
   protected readonly title = signal('doctor-management');
+  protected readonly isSidebarOpen = signal(false);
+
+  toggleSidebar(): void {
+    this.isSidebarOpen.update(open => !open);
+  }
+
+  closeSidebar(): void {
+    this.isSidebarOpen.set(false);
+  }
 }
