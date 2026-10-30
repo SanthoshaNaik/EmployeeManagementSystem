@@ -101,10 +101,14 @@
             />
             @if (isFieldInvalid('fullName')) {
               <small class="error-text">
-                @if (employeeForm.get('fullName')?.hasError('required') || employeeForm.get('fullName')?.hasError('pattern')) {
+                @if (employeeForm.get('fullName')?.hasError('required')) {
                   Full Name is required.
                 } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
-                  Full Name must be at least 5 characters.
+                  Full Name must be at least 3 characters.
+                } @else if (employeeForm.get('fullName')?.hasError('hasNumbers')) {
+                  Full Name cannot contain numbers.
+                } @else if (employeeForm.get('fullName')?.hasError('invalidCharacters') || employeeForm.get('fullName')?.hasError('pattern')) {
+                  Only letters, spaces, dots, and hyphens are allowed.
                 }
               </small>
             }

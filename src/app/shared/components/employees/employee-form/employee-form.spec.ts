@@ -73,6 +73,28 @@ describe('EmployeeForm Component', () => {
     expect(component.employeeForm.controls['email'].hasError('required')).toBe(true);
   });
 
+  it('should validate full name and reject numeric digits', () => {
+    const nameControl = component.employeeForm.controls['fullName'];
+
+    // Reject numbers
+    nameControl.setValue('John Doe 123');
+    expect(nameControl.hasError('hasNumbers')).toBe(true);
+
+    nameControl.setValue('Agent007');
+    expect(nameControl.hasError('hasNumbers')).toBe(true);
+
+    // Minimum length
+    nameControl.setValue('Al');
+    expect(nameControl.hasError('minlength')).toBe(true);
+
+    // Valid names
+    nameControl.setValue('John Doe');
+    expect(nameControl.valid).toBe(true);
+
+    nameControl.setValue('Mary-Jane Watson');
+    expect(nameControl.valid).toBe(true);
+  });
+
   it('should validate email format correctly', () => {
     const emailControl = component.employeeForm.controls['email'];
 

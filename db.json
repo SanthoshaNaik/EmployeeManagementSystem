@@ -41,6 +41,17 @@
       "joiningDate": "2026-10-14",
       "isActive": true,
       "id": "oEsDz8GjxSA"
+    },
+    {
+      "employeeCode": "EMP109",
+      "fullName": "sanj",
+      "email": "santhoshanaik@gmail.com",
+      "department": "Information Technology",
+      "designation": "SWE",
+      "joiningDate": "2026-10-21",
+      "isActive": true,
+      "employeeId": null,
+      "id": "-7IUBQoIj5M"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

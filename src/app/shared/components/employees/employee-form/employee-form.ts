@@ -41,10 +41,25 @@ export class EmployeeForm implements OnInit {
         this.validateEmployeeCode.bind(this)
       ]
     ],
-    fullName: ['', [Validators.required, Validators.minLength(5)]],
+    fullName: [
+      '',
+      [
+        Validators.required,
+        Validators.minLength(3),
+        this.validateFullName.bind(this)
+      ]
+    ],
     email: ['', [Validators.required, this.validateEmail.bind(this)]],
+    
     department: ['', [Validators.required]],
-    designation: ['', [Validators.required]],
+
+    designation: ['',
+       [
+                    Validators.required,
+                   this.validateFullName.bind(this)
+       ]
+    ],
+
     joiningDate: ['', [Validators.required]],
     isActive: ['', [Validators.required]]
   });
@@ -139,6 +154,28 @@ export class EmployeeForm implements OnInit {
 
     if (isDuplicate) {
       return { codeTaken: true };
+    }
+
+    return null;
+  }
+
+  validateFullName(control: AbstractControl) {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    const name = String(value).trim();
+
+    // Do not accept numerics (numbers)
+    if (/\d/.test(name)) {
+      return { hasNumbers: true };
+    }
+
+    // Only allow letters, spaces, hyphens, and dots
+    if (!/^[A-Za-z\s.'-]+$/.test(name)) {
+      return { invalidCharacters: true };
     }
 
     return null;
