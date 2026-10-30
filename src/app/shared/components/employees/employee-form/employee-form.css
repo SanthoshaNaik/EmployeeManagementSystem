@@ -26,6 +26,20 @@
   font-size: 14px;
 }
 
+.mandatory-note {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #b91c1c;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
 .back-link {
   display: inline-flex;
   align-items: center;

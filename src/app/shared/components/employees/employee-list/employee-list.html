@@ -1,3 +1,5 @@
+<!-- Dipul Raj -->
+
 
 <section class="employee-page">
 
@@ -5,7 +7,7 @@
   <header class="page-header">
     <div>
       <h1>Employees</h1>
-      <p>Manage your organization's workforce, departments, and employment status.</p>
+     
     </div>
 
     <a routerLink="/employees/add" class="add-button">
@@ -13,47 +15,31 @@
     </a>
   </header>
 
-  <!-- Success Notification Banner -->
-  @if (successMessage) {
-    <div class="alert-banner success-banner" role="status">
-      <div class="banner-body">
-        <span class="banner-icon">&#10003;</span>
-        <span>{{ successMessage }}</span>
-      </div>
-      <button
-        type="button"
-        class="close-banner"
-        (click)="clearSuccessMessage()"
-        aria-label="Dismiss"
-      >&times;</button>
-    </div>
-  }
-
-  <!-- Error Notification Banner -->
-  @if (errorMessage) {
-    <div class="alert-banner error-banner" role="alert">
-      <div class="banner-body">
-        <span class="banner-icon">&#9888;</span>
-        <div>
-          <strong>Error Encountered</strong>
-          <p>{{ errorMessage }}</p>
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+    @if (successMessage) {
+      <div class="popup-message popup-success" role="status">
+        <div class="popup-icon">&#10003;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Success</h4>
+          <p class="popup-text">{{ successMessage }}</p>
         </div>
+        <button type="button" class="popup-close" (click)="clearSuccessMessage()" aria-label="Close popup">&times;</button>
       </div>
-      <div class="banner-actions">
-        <button
-          type="button"
-          class="retry-inline-btn"
-          (click)="fetchEmployees()"
-        >Retry</button>
-        <button
-          type="button"
-          class="close-banner"
-          (click)="clearErrorMessage()"
-          aria-label="Dismiss"
-        >&times;</button>
+    }
+
+    @if (errorMessage) {
+      <div class="popup-message popup-error" role="alert">
+        <div class="popup-icon">&#9888;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Error</h4>
+          <p class="popup-text">{{ errorMessage }}</p>
+          <button type="button" class="popup-action-btn" (click)="fetchEmployees()">Retry</button>
+        </div>
+        <button type="button" class="popup-close" (click)="clearErrorMessage()" aria-label="Close popup">&times;</button>
       </div>
-    </div>
-  }
+    }
+  </div>
 
   <!-- Search & Filter Controls -->
   <div class="content-card">
@@ -62,7 +48,7 @@
       <div class="search-field">
         <input
           type="text"
-          placeholder="Search by name, employee code (e.g. EMP001), or designation..."
+          placeholder="Search by name, employee code (e.g. EMP001)"
           [(ngModel)]="searchTerm"
           class="search-input"
           aria-label="Search employees"
@@ -96,12 +82,7 @@
     <!-- Employee Table -->
     <div class="table-container">
 
-      @if (isLoading) {
-        <div class="state-message">
-          <div class="spinner"></div>
-          <p>Loading employee records...</p>
-        </div>
-      } @else {
+
         <table>
           <thead>
             <tr>
@@ -117,7 +98,7 @@
           </thead>
 
           <tbody>
-            @for (emp of filteredEmployees; track emp.id || emp.employeeId || emp.employeeCode) {
+            @for (emp of (employees | search: searchTerm : selectedDepartment : selectedStatus); track emp.id || emp.employeeId || emp.employeeCode) {
               <tr>
                 <td>
                   <span class="emp-code-badge">{{ emp.employeeCode }}</span>
@@ -190,26 +171,14 @@
                 <td colspan="8" class="empty-state-cell">
                   <div class="empty-box">
                     <p class="empty-title">No employees found</p>
-                    <p class="empty-subtitle">
-                      {{
-                        searchTerm || selectedDepartment || selectedStatus
-                          ? 'No employee matched your search criteria. Try adjusting or clearing your filters.'
-                          : 'No employees have been registered in the system yet.'
-                      }}
-                    </p>
-                    <a
-                      routerLink="/employees/add"
-                      class="add-button small-btn"
-                    >
-                      + Add New Employee
-                    </a>
+                    
+                    
                   </div>
                 </td>
               </tr>
             }
           </tbody>
         </table>
-      }
 
     </div>
 

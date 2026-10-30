@@ -1,23 +1,15 @@
 {
   "employees": [
     {
-      "id": "2",
-      "employeeId": 2,
-      "fullName": "Jane Smith",
       "employeeCode": "EMP002",
-      "designation": "Manager",
-      "department": "HR",
-      "isActive": true
-    },
-    {
-      "employeeCode": "EMP103",
-      "fullName": "Rudra",
-      "email": "rudra@gmail.com",
+      "fullName": "Jane Smithh",
+      "email": "smith@gil.com",
       "department": "Marketing & Sales",
       "designation": "Manager",
       "joiningDate": "2026-10-30",
       "isActive": true,
-      "id": "onHLEaEkQvk"
+      "employeeId": 2,
+      "id": "2"
     },
     {
       "employeeCode": "EMP101",
@@ -28,6 +20,17 @@
       "joiningDate": "2026-10-30",
       "isActive": false,
       "id": "URMhJpWC-hs"
+    },
+    {
+      "employeeCode": "EMP105",
+      "fullName": "Santhosh Naik",
+      "email": "santhoshanaik02@gmail.com",
+      "department": "Human Resources",
+      "designation": "SWE",
+      "joiningDate": "2026-10-29",
+      "isActive": true,
+      "employeeId": null,
+      "id": "mUleBDi2xkk"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

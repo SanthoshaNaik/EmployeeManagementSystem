@@ -1,4 +1,21 @@
+<!-- Harsha -->
+  <!--Pipes  -->
+
 <section class="detail-page">
+
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+    @if (actionErrorMessage) {
+      <div class="popup-message popup-error" role="alert">
+        <div class="popup-icon">&#9888;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Error</h4>
+          <p class="popup-text">{{ actionErrorMessage }}</p>
+        </div>
+        <button type="button" class="popup-close" (click)="clearActionError()" aria-label="Close popup">&times;</button>
+      </div>
+    }
+  </div>
 
   <!-- Header -->
   <header class="page-header">

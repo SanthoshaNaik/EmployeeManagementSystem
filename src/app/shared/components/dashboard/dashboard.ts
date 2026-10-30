@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 
-import { Employee } from '../../shared/models/employee.model';
-import { EmployeeService } from '../../core/services/employee.service';
+import { Employee } from '../../models/employee.model';
+import { EmployeeService } from '../../../core/services/employee.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,30 +17,42 @@ export class Dashboard implements OnInit {
   private cdr = inject(ChangeDetectorRef);
 
   employees: Employee[] = [];
-  isLoading = true;
+  isLoading = false;
   errorMessage = '';
+  private errorTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     this.loadMetrics();
   }
 
   loadMetrics(): void {
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.cdr.markForCheck();
+    this.clearErrorMessage();
 
     this.employeeService.getEmployees().subscribe({
       next: (data) => {
         this.employees = data;
-        this.isLoading = false;
         this.cdr.markForCheck();
       },
-      error: (error: Error) => {
-        this.errorMessage = error.message || 'Unable to retrieve employee metrics.';
-        this.isLoading = false;
+      error: () => {
+        this.errorMessage = 'Unable to retrieve employee metrics.';
         this.cdr.markForCheck();
+
+        this.errorTimer = setTimeout(() => {
+          this.errorMessage = '';
+          this.cdr.markForCheck();
+        }, 5000);
       }
     });
+  }
+
+  clearErrorMessage(): void {
+    if (this.errorTimer) {
+      clearTimeout(this.errorTimer);
+      this.errorTimer = null;
+    }
+
+    this.errorMessage = '';
+    this.cdr.markForCheck();
   }
 
   get totalEmployees(): number {

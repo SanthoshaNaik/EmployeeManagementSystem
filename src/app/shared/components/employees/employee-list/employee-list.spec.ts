@@ -5,8 +5,8 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { EmployeeList } from './employee-list';
-import { EmployeeService } from '../../../core/services/employee.service';
-import { Employee } from '../../../core/models/employee.model';
+import { EmployeeService } from '../../../../core/services/employee.service';
+import { Employee } from '../../../models/employee.model';
 
 describe('EmployeeList Component', () => {
   let component: EmployeeList;

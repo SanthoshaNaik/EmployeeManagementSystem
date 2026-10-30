@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Dashboard } from './features/dashboard/dashboard';
-import { EmployeeList } from './features/employees/employee-list/employee-list';
-import { EmployeeForm } from './features/employees/employee-form/employee-form';
-import { EmployeeDetail } from './features/employees/employee-detail/employee-detail';
+import { Dashboard } from './shared/components/dashboard/dashboard';
+import { EmployeeList } from './shared/components/employees/employee-list/employee-list';
+import { EmployeeForm } from './shared/components/employees/employee-form/employee-form';
+import { EmployeeDetail } from './shared/components/employees/employee-detail/employee-detail';
 
 /**
  * Application Routes for Employee Management System

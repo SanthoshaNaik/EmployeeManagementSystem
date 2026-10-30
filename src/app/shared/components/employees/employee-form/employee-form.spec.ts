@@ -5,8 +5,8 @@ import { provideRouter, ActivatedRoute, Router } from '@angular/router';
 import { of } from 'rxjs';
 
 import { EmployeeForm } from './employee-form';
-import { EmployeeService } from '../../../core/services/employee.service';
-import { Employee } from '../../../core/models/employee.model';
+import { EmployeeService } from '../../../../core/services/employee.service';
+import { Employee } from '../../../models/employee.model';
 
 describe('EmployeeForm Component', () => {
   let component: EmployeeForm;
@@ -79,8 +79,48 @@ describe('EmployeeForm Component', () => {
     emailControl.setValue('invalid-email-address');
     expect(emailControl.hasError('email')).toBe(true);
 
+    emailControl.setValue('user@domain'); // Missing TLD
+    expect(emailControl.hasError('email')).toBe(true);
+
+    emailControl.setValue('user with spaces@company.com');
+    expect(emailControl.hasError('email')).toBe(true);
+
     emailControl.setValue('valid.employee@company.com');
     expect(emailControl.hasError('email')).toBe(false);
+
+    emailControl.setValue('john.doe+tag@sub.example.co.uk');
+    expect(emailControl.hasError('email')).toBe(false);
+  });
+
+  it('should validate employee code correctly', () => {
+    const codeControl = component.employeeForm.controls['employeeCode'];
+
+    // Minimum length check
+    codeControl.setValue('AB');
+    expect(codeControl.hasError('minlength')).toBe(true);
+
+    // Spaces check
+    codeControl.setValue('EMP 01');
+    expect(codeControl.hasError('codeSpaces')).toBe(true);
+
+    // At least one digit check
+    codeControl.setValue('EMPABC');
+    expect(codeControl.hasError('missingDigit')).toBe(true);
+
+    // Invalid characters check
+    codeControl.setValue('EMP@123');
+    expect(codeControl.hasError('pattern')).toBe(true);
+
+    // Duplicate employee code check
+    component.existingEmployees = [
+      { employeeCode: 'EMP101', fullName: 'Existing User' } as any
+    ];
+    codeControl.setValue('EMP101');
+    expect(codeControl.hasError('codeTaken')).toBe(true);
+
+    // Valid unique code with letters and digits
+    codeControl.setValue('EMP999');
+    expect(codeControl.valid).toBe(true);
   });
 
   it('should call createEmployee on service when submitting valid form in Add mode', () => {

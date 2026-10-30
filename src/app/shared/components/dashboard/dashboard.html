@@ -1,3 +1,6 @@
+<!-- Rohan Raj -->
+ <!-- Model.ts -->
+
 <section class="dashboard">
 
   <!-- Page Title -->
@@ -7,37 +10,44 @@
     </div>
   </header>
 
-  <!-- Error Notification -->
-  @if (errorMessage) {
-    <div class="error-banner">
-      <span>{{ errorMessage }}</span>
-      <button type="button" class="retry-btn" (click)="loadMetrics()">Retry</button>
-    </div>
-  }
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+    @if (errorMessage) {
+      <div class="popup-message popup-error" role="alert">
+        <div class="popup-icon">&#9888;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Error</h4>
+          <p class="popup-text">{{ errorMessage }}</p>
+          <button type="button" class="popup-action-btn" (click)="loadMetrics()">Retry</button>
+        </div>
+        <button type="button" class="popup-close" (click)="clearErrorMessage()" aria-label="Close popup">&times;</button>
+      </div>
+    }
+  </div>
 
   <!-- Stats Grid -->
   <div class="stats-grid">
     <div class="stat-card">
       <p>Total Employees</p>
-      <h2>{{ isLoading ? '...' : totalEmployees }}</h2>
+      <h2>{{ totalEmployees }}</h2>
       
     </div>
 
     <div class="stat-card">
       <p>Currently working</p>
-      <h2>{{ isLoading ? '...' : activeEmployees }}</h2>
+      <h2>{{ activeEmployees }}</h2>
       
     </div>
 
     <div class="stat-card">
       <p>Inactive Staff</p>
-      <h2>{{ isLoading ? '...' : inactiveEmployees }}</h2>
+      <h2>{{ inactiveEmployees }}</h2>
       
     </div>
 
     <div class="stat-card">
       <p>Departments</p>
-      <h2>{{ isLoading ? '...' : departmentCount }}</h2>
+      <h2>{{ departmentCount }}</h2>
       
     </div>
   </div>
@@ -49,14 +59,14 @@
         <h2>Employee Management System</h2>
       </div>
       <div class="quick-actions">
-        <a routerLink="/employees/add" class="action-btn primary-btn">+ Add New Employee</a>
+       
         <a routerLink="/employees" class="action-btn secondary-btn">View All Employees</a>
       </div>
     </div>
   </div>
 
   <!-- Recent Employees Section -->
-  @if (!isLoading && recentEmployees.length > 0) {
+  @if (recentEmployees.length > 0) {
     <div class="recent-card">
       <div class="recent-header">
         <h3>Recently Added Employees</h3>

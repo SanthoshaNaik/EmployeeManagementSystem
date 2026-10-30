@@ -5,8 +5,8 @@ import { provideRouter } from '@angular/router';
 import { of } from 'rxjs';
 
 import { Dashboard } from './dashboard';
-import { EmployeeService } from '../../core/services/employee.service';
-import { Employee } from '../../core/models/employee.model';
+import { EmployeeService } from '../../../core/services/employee.service';
+import { Employee } from '../../models/employee.model';
 
 describe('Dashboard Component', () => {
   let component: Dashboard;

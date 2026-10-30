@@ -1,16 +1,13 @@
+<!-- Santhosh Naik -->
+
 <section class="employee-form-page">
 
   <!-- Page Header -->
   <header class="page-header">
     <div>
       <h1>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h1>
-      <p>
-        {{
-          isEditMode
-            ? 'Update the employment details and personal information below.'
-            : 'Fill in the information below to register a new employee in the system.'
-        }}
-      </p>
+     
+    
     </div>
 
     <a routerLink="/employees" class="back-link">
@@ -26,16 +23,19 @@
     </div>
   }
 
-  <!-- Error Alert Banner -->
-  @if (errorMessage) {
-    <div class="error-banner" role="alert">
-      <span class="error-icon">&#9888;</span>
-      <div>
-        <strong>Unable to save</strong>
-        <p>{{ errorMessage }}</p>
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+    @if (errorMessage) {
+      <div class="popup-message popup-error" role="alert">
+        <div class="popup-icon">&#9888;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Unable to Save</h4>
+          <p class="popup-text">{{ errorMessage }}</p>
+        </div>
+        <button type="button" class="popup-close" (click)="clearErrorMessage()" aria-label="Close popup">&times;</button>
       </div>
-    </div>
-  }
+    }
+  </div>
 
   <!-- Main Employee Form -->
   @if (!isLoading) {
@@ -71,8 +71,16 @@
                   Employee Code is required.
                 } @else if (employeeForm.get('employeeCode')?.hasError('minlength')) {
                   Employee Code must be at least 3 characters.
+                } @else if (employeeForm.get('employeeCode')?.hasError('maxlength')) {
+                  Employee Code cannot exceed 10 characters.
+                } @else if (employeeForm.get('employeeCode')?.hasError('codeSpaces')) {
+                  Employee Code cannot contain spaces.
+                } @else if (employeeForm.get('employeeCode')?.hasError('missingDigit')) {
+                  Employee Code must contain at least one digit (e.g. EMP001).
+                } @else if (employeeForm.get('employeeCode')?.hasError('codeTaken')) {
+                  This Employee Code is already in use by another employee.
                 } @else if (employeeForm.get('employeeCode')?.hasError('pattern')) {
-                  Only letters, numbers, and dashes are allowed.
+                  Only letters, numbers, hyphens, and underscores are allowed.
                 }
               </small>
             }
@@ -93,10 +101,10 @@
             />
             @if (isFieldInvalid('fullName')) {
               <small class="error-text">
-                @if (employeeForm.get('fullName')?.hasError('required')) {
+                @if (employeeForm.get('fullName')?.hasError('required') || employeeForm.get('fullName')?.hasError('pattern')) {
                   Full Name is required.
                 } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
-                  Full Name must be at least 3 characters.
+                  Full Name must be at least 5 characters.
                 }
               </small>
             }
@@ -119,8 +127,12 @@
               <small class="error-text">
                 @if (employeeForm.get('email')?.hasError('required')) {
                   Corporate Email is required.
-                } @else if (employeeForm.get('email')?.hasError('email')) {
-                  Please enter a valid email address format (e.g. name&#64;company.com).
+                } @else if (employeeForm.get('email')?.hasError('emailSpaces')) {
+                  Email address cannot contain spaces.
+                } @else if (employeeForm.get('email')?.hasError('emailTaken')) {
+                  This email address is already registered to another employee.
+                } @else if (employeeForm.get('email')?.hasError('invalidEmailFormat') || employeeForm.get('email')?.hasError('email')) {
+                  Please enter a valid email address (e.g. name&#64;company.com with a valid domain like .com, .org).
                 }
               </small>
             }
@@ -198,20 +210,25 @@
             }
           </div>
 
-          <!-- Active Status Checkbox -->
-          <div class="form-group checkbox-group">
-            <label class="checkbox-container">
-              <input
-                type="checkbox"
-                formControlName="isActive"
-                id="isActive"
-              />
-              <span class="checkmark"></span>
-              <span class="checkbox-label">
-                <strong>Active Employment Status</strong>
-                <small>Indicates whether this employee is currently employed and active in the company.</small>
-              </span>
+          <!-- Employment Status -->
+          <div class="form-group">
+            <label for="isActive">
+              Employment Status <span class="required">*</span>
             </label>
+            <select
+              id="isActive"
+              formControlName="isActive"
+              [class.input-error]="isFieldInvalid('isActive')"
+            >
+              <option value="" disabled>-- Select Status --</option>
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+            @if (isFieldInvalid('isActive')) {
+              <small class="error-text">
+                Employment Status is required.
+              </small>
+            }
           </div>
         </div>
       </div>

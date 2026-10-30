@@ -2,8 +2,8 @@ import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
-import { Employee } from '../../../shared/models/employee.model';
-import { EmployeeService } from '../../../core/services/employee.service';
+import { Employee } from '../../../models/employee.model';
+import { EmployeeService } from '../../../../core/services/employee.service';
 
 @Component({
   selector: 'app-employee-detail',
@@ -21,12 +21,14 @@ export class EmployeeDetail implements OnInit {
   employee: Employee | null = null;
   isLoading = true;
   errorMessage = '';
+  actionErrorMessage = '';
+  private actionErrorTimer: ReturnType<typeof setTimeout> | null = null;
 
   ngOnInit(): void {
     const id = this.route.snapshot.paramMap.get('id');
 
     if (id) {
-      this.fetchEmployee(Number(id));
+      this.fetchEmployee(id);
     } else {
       this.errorMessage = 'Employee ID was not provided in the route.';
       this.isLoading = false;
@@ -34,7 +36,7 @@ export class EmployeeDetail implements OnInit {
     }
   }
 
-  fetchEmployee(id: number): void {
+  fetchEmployee(id: string): void {
     this.isLoading = true;
     this.errorMessage = '';
     this.cdr.markForCheck();
@@ -45,8 +47,8 @@ export class EmployeeDetail implements OnInit {
         this.isLoading = false;
         this.cdr.markForCheck();
       },
-      error: (error: Error) => {
-        this.errorMessage = error.message || 'Unable to retrieve employee details.';
+      error: () => {
+        this.errorMessage = 'Unable to retrieve employee details.';
         this.isLoading = false;
         this.cdr.markForCheck();
       }
@@ -54,15 +56,17 @@ export class EmployeeDetail implements OnInit {
   }
 
   deleteCurrentEmployee(): void {
-    if (!this.employee?.employeeId) return;
+    const id = this.employee?.id ?? this.employee?.employeeId;
+
+    if (!id) return;
 
     const confirmed = window.confirm(
-      `Are you sure you want to delete employee "${this.employee.fullName}"? This action cannot be undone.`
+      `Are you sure you want to delete employee "${this.employee?.fullName}"?`
     );
 
     if (!confirmed) return;
 
-    this.employeeService.deleteEmployee(this.employee.employeeId).subscribe({
+    this.employeeService.deleteEmployee(id).subscribe({
       next: () => {
         this.router.navigate(['/employees'], {
           state: {
@@ -70,11 +74,27 @@ export class EmployeeDetail implements OnInit {
           }
         });
       },
-      error: (error: Error) => {
-        this.errorMessage = error.message || 'Failed to delete employee.';
-        this.cdr.markForCheck();
+      error: () => {
+        this.actionErrorMessage = 'Failed to delete employee.';
+
+        if (this.actionErrorTimer) {
+          clearTimeout(this.actionErrorTimer);
+        }
+
+        this.actionErrorTimer = setTimeout(() => {
+          this.actionErrorMessage = '';
+          this.actionErrorTimer = null;
+        }, 5000);
       }
     });
   }
-}
 
+  clearActionError(): void {
+    if (this.actionErrorTimer) {
+      clearTimeout(this.actionErrorTimer);
+      this.actionErrorTimer = null;
+    }
+
+    this.actionErrorMessage = '';
+  }
+}
