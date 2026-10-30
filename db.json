@@ -31,6 +31,16 @@
       "isActive": true,
       "employeeId": null,
       "id": "mUleBDi2xkk"
+    },
+    {
+      "employeeCode": "EMP106",
+      "fullName": "Kiran raj",
+      "email": "kiran@gmail.com",
+      "department": "Information Technology",
+      "designation": "software Engineer",
+      "joiningDate": "2026-10-14",
+      "isActive": true,
+      "id": "oEsDz8GjxSA"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
