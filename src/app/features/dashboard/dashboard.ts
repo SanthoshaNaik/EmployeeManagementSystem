@@ -1,63 +1,65 @@
 import { Component, OnInit, inject, ChangeDetectorRef } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { DoctorService } from '../../core/services/doctor';
-import { DoctorModel } from '../../shared/models/doctor.model';
+
+import { Employee } from '../../shared/models/employee.model';
+import { EmployeeService } from '../../core/services/employee.service';
 
 @Component({
-  imports: [RouterLink],
   selector: 'app-dashboard',
-  styleUrl: './dashboard.css',
+  standalone: true,
+  imports: [CommonModule, RouterLink],
   templateUrl: './dashboard.html',
+  styleUrl: './dashboard.css',
 })
 export class Dashboard implements OnInit {
-  private doctorService = inject(DoctorService);
+  private employeeService = inject(EmployeeService);
   private cdr = inject(ChangeDetectorRef);
 
-  doctors: DoctorModel[] = [];
+  employees: Employee[] = [];
   isLoading = true;
   errorMessage = '';
 
   ngOnInit(): void {
-    this.loadStats();
+    this.loadMetrics();
   }
 
-  loadStats(): void {
+  loadMetrics(): void {
     this.isLoading = true;
     this.errorMessage = '';
     this.cdr.markForCheck();
 
-    this.doctorService.getDoctors().subscribe({
+    this.employeeService.getEmployees().subscribe({
       next: (data) => {
-        this.doctors = data;
+        this.employees = data;
         this.isLoading = false;
         this.cdr.markForCheck();
       },
-      error: (error) => {
-        console.error('Failed to load dashboard statistics:', error);
-        this.errorMessage = 'Unable to load live statistics.';
+      error: (error: Error) => {
+        this.errorMessage = error.message || 'Unable to retrieve employee metrics.';
         this.isLoading = false;
         this.cdr.markForCheck();
       }
     });
   }
 
-  get totalDoctors(): number {
-    return this.doctors.length;
+  get totalEmployees(): number {
+    return this.employees.length;
   }
 
-  get availableDoctors(): number {
-    return this.doctors.filter(d => d.status === 'Available').length;
+  get activeEmployees(): number {
+    return this.employees.filter(e => e.isActive).length;
   }
 
-  get specializationsCount(): number {
-    return new Set(this.doctors.map(d => d.specialization)).size;
+  get inactiveEmployees(): number {
+    return this.employees.filter(e => !e.isActive).length;
   }
 
-  get onLeaveDoctors(): number {
-    return this.doctors.filter(d => d.status === 'On Leave').length;
+  get departmentCount(): number {
+    return new Set(this.employees.map(e => e.department)).size;
   }
 
-  get recentDoctors(): DoctorModel[] {
-    return this.doctors.slice(-4).reverse();
+  get recentEmployees(): Employee[] {
+    return this.employees.slice(-4).reverse();
   }
 }

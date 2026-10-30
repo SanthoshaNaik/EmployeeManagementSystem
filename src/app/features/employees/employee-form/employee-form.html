@@ -1,0 +1,249 @@
+<section class="employee-form-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h1>
+      <p>
+        {{
+          isEditMode
+            ? 'Update the employment details and personal information below.'
+            : 'Fill in the information below to register a new employee in the system.'
+        }}
+      </p>
+    </div>
+
+    <a routerLink="/employees" class="back-link">
+      &larr; Back to Employees
+    </a>
+  </header>
+
+  <!-- Loading State Indicator when fetching data for Edit -->
+  @if (isLoading) {
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Loading employee information...</p>
+    </div>
+  }
+
+  <!-- Error Alert Banner -->
+  @if (errorMessage) {
+    <div class="error-banner" role="alert">
+      <span class="error-icon">&#9888;</span>
+      <div>
+        <strong>Unable to save</strong>
+        <p>{{ errorMessage }}</p>
+      </div>
+    </div>
+  }
+
+  <!-- Main Employee Form -->
+  @if (!isLoading) {
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="form-container" novalidate>
+
+      <!-- Section 1: Basic Information -->
+      <div class="form-card">
+        <div class="card-heading">
+          <div class="step-badge">1</div>
+          <div>
+            <h2>Identification & Contact</h2>
+            <p>Enter the employee's unique code, full name, and email address.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Employee Code -->
+          <div class="form-group">
+            <label for="employeeCode">
+              Employee Code <span class="required">*</span>
+            </label>
+            <input
+              id="employeeCode"
+              type="text"
+              formControlName="employeeCode"
+              placeholder="e.g. EMP001"
+              autocomplete="off"
+              [class.input-error]="isFieldInvalid('employeeCode')"
+            />
+            @if (isFieldInvalid('employeeCode')) {
+              <small class="error-text">
+                @if (employeeForm.get('employeeCode')?.hasError('required')) {
+                  Employee Code is required.
+                } @else if (employeeForm.get('employeeCode')?.hasError('minlength')) {
+                  Employee Code must be at least 3 characters.
+                } @else if (employeeForm.get('employeeCode')?.hasError('pattern')) {
+                  Only letters, numbers, and dashes are allowed.
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="fullName">
+              Full Name <span class="required">*</span>
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              formControlName="fullName"
+              placeholder="e.g. John Doe"
+              autocomplete="name"
+              [class.input-error]="isFieldInvalid('fullName')"
+            />
+            @if (isFieldInvalid('fullName')) {
+              <small class="error-text">
+                @if (employeeForm.get('fullName')?.hasError('required')) {
+                  Full Name is required.
+                } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
+                  Full Name must be at least 3 characters.
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Email Address -->
+          <div class="form-group full-row">
+            <label for="email">
+              Corporate Email Address <span class="required">*</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="e.g. john.doe@company.com"
+              autocomplete="email"
+              [class.input-error]="isFieldInvalid('email')"
+            />
+            @if (isFieldInvalid('email')) {
+              <small class="error-text">
+                @if (employeeForm.get('email')?.hasError('required')) {
+                  Corporate Email is required.
+                } @else if (employeeForm.get('email')?.hasError('email')) {
+                  Please enter a valid email address format (e.g. name&#64;company.com).
+                }
+              </small>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Department & Role -->
+      <div class="form-card">
+        <div class="card-heading">
+          <div class="step-badge">2</div>
+          <div>
+            <h2>Employment Details</h2>
+            <p>Specify the department, designation, and starting date.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Department -->
+          <div class="form-group">
+            <label for="department">
+              Department <span class="required">*</span>
+            </label>
+            <select
+              id="department"
+              formControlName="department"
+              [class.input-error]="isFieldInvalid('department')"
+            >
+              <option value="">-- Select Department --</option>
+              @for (dept of departments; track dept) {
+                <option [value]="dept">{{ dept }}</option>
+              }
+            </select>
+            @if (isFieldInvalid('department')) {
+              <small class="error-text">
+                Department selection is required.
+              </small>
+            }
+          </div>
+
+          <!-- Designation -->
+          <div class="form-group">
+            <label for="designation">
+              Designation / Role <span class="required">*</span>
+            </label>
+            <input
+              id="designation"
+              type="text"
+              formControlName="designation"
+              placeholder="e.g. Senior Software Engineer"
+              [class.input-error]="isFieldInvalid('designation')"
+            />
+            @if (isFieldInvalid('designation')) {
+              <small class="error-text">
+                Designation is required.
+              </small>
+            }
+          </div>
+
+          <!-- Joining Date -->
+          <div class="form-group">
+            <label for="joiningDate">
+              Date of Joining <span class="required">*</span>
+            </label>
+            <input
+              id="joiningDate"
+              type="date"
+              formControlName="joiningDate"
+              [class.input-error]="isFieldInvalid('joiningDate')"
+            />
+            @if (isFieldInvalid('joiningDate')) {
+              <small class="error-text">
+                Joining Date is required.
+              </small>
+            }
+          </div>
+
+          <!-- Active Status Checkbox -->
+          <div class="form-group checkbox-group">
+            <label class="checkbox-container">
+              <input
+                type="checkbox"
+                formControlName="isActive"
+                id="isActive"
+              />
+              <span class="checkmark"></span>
+              <span class="checkbox-label">
+                <strong>Active Employment Status</strong>
+                <small>Indicates whether this employee is currently employed and active in the company.</small>
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="cancel()"
+          [disabled]="isSubmitting"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="isSubmitting"
+        >
+          @if (isSubmitting) {
+            <span>Saving employee...</span>
+          } @else if (isEditMode) {
+            <span>Update Employee</span>
+          } @else {
+            <span>Add Employee</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+
+</section>
+

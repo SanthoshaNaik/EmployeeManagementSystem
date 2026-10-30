@@ -1,111 +1,33 @@
 {
-  "doctors": [
+  "employees": [
     {
-      "name": "Dr. Priya Rao",
-      "email": "priya@example.com",
-      "phone": "9876543211",
-      "specialization": "Dermatology",
-      "qualification": "MBBS, MD",
-      "experience": 5,
-      "consultationFee": 600,
-      "availableDays": [
-        "Tuesday",
-        "Thursday",
-        "Saturday"
-      ],
-      "workingHours": "10:00 AM - 02:00 PM",
-      "status": "Available",
-      "id": "2"
+      "id": "2",
+      "employeeId": 2,
+      "fullName": "Jane Smith",
+      "employeeCode": "EMP002",
+      "designation": "Manager",
+      "department": "HR",
+      "isActive": true
     },
     {
-      "id": "3",
-      "name": "Dr. Amit Kumar",
-      "email": "amit@example.com",
-      "phone": "9876543212",
-      "specialization": "Neurology",
-      "qualification": "MBBS, DM",
-      "experience": 10,
-      "consultationFee": 1000,
-      "availableDays": [
-        "Monday",
-        "Tuesday",
-        "Friday"
-      ],
-      "workingHours": "02:00 PM - 06:00 PM",
-      "status": "On Leave"
-    },
-    {
-      "id": "4",
-      "name": "Dr. Sneha Patel",
-      "email": "sneha@example.com",
-      "phone": "9876543213",
-      "specialization": "Pediatrics",
-      "qualification": "MBBS, MD",
-      "experience": 6,
-      "consultationFee": 700,
-      "availableDays": [
-        "Wednesday",
-        "Thursday",
-        "Saturday"
-      ],
-      "workingHours": "09:00 AM - 12:00 PM",
-      "status": "Unavailable"
-    },
-    {
-      "name": "Dr.maya",
-      "email": "may12@gmail.com",
-      "phone": "1234567891",
-      "specialization": "General Medicine",
-      "qualification": "MBBS",
-      "experience": 4,
-      "consultationFee": 400,
-      "availableDays": [
-        "Monday",
-        "Wednesday",
-        "Friday",
-        "Tuesday",
-        "Thursday"
-      ],
-      "workingHours": "09:00 AM - 12:00 PM",
-      "status": "Available",
-      "id": "6VSjZAL3k2Y"
-    },
-    {
-      "name": "Dr.Rudra",
+      "employeeCode": "EMP103",
+      "fullName": "Rudra",
       "email": "rudra@gmail.com",
-      "phone": "1234567891",
-      "specialization": "Cardiology",
-      "qualification": "MBBS",
-      "experience": 5,
-      "consultationFee": 700,
-      "availableDays": [
-        "Monday",
-        "Friday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday"
-      ],
-      "workingHours": "09:00 AM - 01:00 PM",
-      "status": "Available",
-      "id": "yDPAGZRcESI"
+      "department": "Marketing & Sales",
+      "designation": "Manager",
+      "joiningDate": "2026-10-30",
+      "isActive": true,
+      "id": "onHLEaEkQvk"
     },
     {
-      "name": "Dr. Rahul Sharma",
-      "email": "rahul@example.com",
-      "phone": "9876543210",
-      "specialization": "Orthopedics",
-      "qualification": "MBBS, MD",
-      "experience": 4,
-      "consultationFee": 480,
-      "availableDays": [
-        "Tuesday",
-        "Monday",
-        "Saturday",
-        "Sunday"
-      ],
-      "workingHours": "09:00 AM - 01:00 PM",
-      "status": "Available",
-      "id": "dpJ2zeoNFRg"
+      "employeeCode": "EMP101",
+      "fullName": "Ram",
+      "email": "ram@gmail.com",
+      "department": "Human Resources",
+      "designation": "HR",
+      "joiningDate": "2026-10-30",
+      "isActive": false,
+      "id": "URMhJpWC-hs"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

@@ -1,9 +1,12 @@
 import { Routes } from '@angular/router';
-import { DoctorList } from './features/doctors/doctor-list/doctor-list';
-import { DoctorForm } from './features/doctors/doctor-form/doctor-form';
-import { DoctorDetail } from './features/doctors/doctor-detail/doctor-detail';
 import { Dashboard } from './features/dashboard/dashboard';
+import { EmployeeList } from './features/employees/employee-list/employee-list';
+import { EmployeeForm } from './features/employees/employee-form/employee-form';
+import { EmployeeDetail } from './features/employees/employee-detail/employee-detail';
 
+/**
+ * Application Routes for Employee Management System
+ */
 export const routes: Routes = [
   {
     path: '',
@@ -12,27 +15,31 @@ export const routes: Routes = [
   },
   {
     path: 'dashboard',
-    component: Dashboard
+    component: Dashboard,
+    title: 'Dashboard - Employee Management System'
   },
   {
-    path: 'doctors',
-    component: DoctorList
+    path: 'employees',
+    component: EmployeeList,
+    title: 'Employees - Employee Management System'
   },
   {
-    path: 'doctors/add',
-    component: DoctorForm
+    path: 'employees/add',
+    component: EmployeeForm,
+    title: 'Add Employee - Employee Management System'
   },
   {
-    path: 'doctors/edit/:id',
-    component: DoctorForm
+    path: 'employees/edit/:id',
+    component: EmployeeForm,
+    title: 'Edit Employee - Employee Management System'
   },
   {
-    path: 'doctors/:id',
-    component: DoctorDetail
+    path: 'employees/:id',
+    component: EmployeeDetail,
+    title: 'Employee Details - Employee Management System'
   },
   {
     path: '**',
     redirectTo: 'dashboard'
   }
 ];
-

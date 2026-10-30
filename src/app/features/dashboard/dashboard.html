@@ -1,87 +1,87 @@
 <section class="dashboard">
 
-  <div class="page-title">
+  <!-- Page Title -->
+  <header class="page-title">
     <div>
       <h1>Dashboard</h1>
-      <p>Overview of your doctor management system.</p>
     </div>
-  </div>
+  </header>
 
+  <!-- Error Notification -->
   @if (errorMessage) {
-  <div class="error-banner">
-    <span>{{ errorMessage }}</span>
-    <button type="button" class="retry-btn" (click)="loadStats()">Retry</button>
-  </div>
+    <div class="error-banner">
+      <span>{{ errorMessage }}</span>
+      <button type="button" class="retry-btn" (click)="loadMetrics()">Retry</button>
+    </div>
   }
 
+  <!-- Stats Grid -->
   <div class="stats-grid">
-
     <div class="stat-card">
-      <p>Total Doctors</p>
-      <h2>{{ isLoading ? '...' : totalDoctors }}</h2>
-      <span>Registered doctors</span>
+      <p>Total Employees</p>
+      <h2>{{ isLoading ? '...' : totalEmployees }}</h2>
+      
     </div>
 
     <div class="stat-card">
-      <p>Available Doctors</p>
-      <h2>{{ isLoading ? '...' : availableDoctors }}</h2>
-      <span>Currently available</span>
+      <p>Currently working</p>
+      <h2>{{ isLoading ? '...' : activeEmployees }}</h2>
+      
     </div>
 
     <div class="stat-card">
-      <p>Specializations</p>
-      <h2>{{ isLoading ? '...' : specializationsCount }}</h2>
-      <span>Medical specialties</span>
+      <p>Inactive Staff</p>
+      <h2>{{ isLoading ? '...' : inactiveEmployees }}</h2>
+      
     </div>
 
     <div class="stat-card">
-      <p>On Leave</p>
-      <h2>{{ isLoading ? '...' : onLeaveDoctors }}</h2>
-      <span>Doctors on leave</span>
+      <p>Departments</p>
+      <h2>{{ isLoading ? '...' : departmentCount }}</h2>
+      
     </div>
-
   </div>
 
+  <!-- Welcome / Quick Actions Card -->
   <div class="welcome-card">
     <div class="welcome-header">
       <div>
-        <h2>Welcome to DoctorCare</h2>
-        <p>
-          Manage doctor profiles, qualifications, specializations,
-          and availability from one central dashboard.
-        </p>
+        <h2>Employee Management System</h2>
       </div>
       <div class="quick-actions">
-        <a routerLink="/doctors/add" class="action-btn primary-btn">+ Add New Doctor</a>
-        <a routerLink="/doctors" class="action-btn secondary-btn">View All Doctors</a>
+        <a routerLink="/employees/add" class="action-btn primary-btn">+ Add New Employee</a>
+        <a routerLink="/employees" class="action-btn secondary-btn">View All Employees</a>
       </div>
     </div>
   </div>
 
-  @if (!isLoading && recentDoctors.length > 0) {
-  <div class="recent-card">
-    <div class="recent-header">
-      <h3>Recently Added Doctors</h3>
-      <a routerLink="/doctors" class="view-all-link">View all &rarr;</a>
-    </div>
-
-    <div class="recent-grid">
-      @for (doc of recentDoctors; track doc.id) {
-      <div class="doctor-badge-card">
-        <div class="doctor-name">{{ doc.name }}</div>
-        <div class="doctor-specialty">{{ doc.specialization }}</div>
-        <div class="doctor-status">
-          <span class="status-tag"
-            [class.available]="doc.status === 'Available'"
-            [class.on-leave]="doc.status === 'On Leave'"
-            [class.unavailable]="doc.status === 'Unavailable'">
-            {{ doc.status }}
-          </span>
-        </div>
+  <!-- Recent Employees Section -->
+  @if (!isLoading && recentEmployees.length > 0) {
+    <div class="recent-card">
+      <div class="recent-header">
+        <h3>Recently Added Employees</h3>
+        <a routerLink="/employees" class="view-all-link">View all employees &rarr;</a>
       </div>
-      }
+
+      <div class="recent-grid">
+        @for (emp of recentEmployees; track emp.employeeId || emp.employeeCode) {
+          <div class="emp-card">
+            <div class="emp-top">
+              <span class="emp-code">{{ emp.employeeCode }}</span>
+              <span
+                class="status-dot"
+                [class.active]="emp.isActive"
+                [class.inactive]="!emp.isActive"
+                [title]="emp.isActive ? 'Active' : 'Inactive'"
+              ></span>
+            </div>
+            <div class="emp-name">{{ emp.fullName }}</div>
+            <div class="emp-role">{{ emp.designation }}</div>
+            <div class="emp-dept">{{ emp.department }}</div>
+          </div>
+        }
+      </div>
     </div>
-  </div>
   }
 
 </section>

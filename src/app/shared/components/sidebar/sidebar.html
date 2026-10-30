@@ -6,8 +6,8 @@
 
   <div class="sidebar-top">
     <div class="brand">
-      <h2>DoctorCare</h2>
-      <p>Management System</p>
+      <h2>EMS</h2>
+      <p>Employee Management</p>
     </div>
     <button type="button" class="sidebar-close-btn" (click)="close()" aria-label="Close navigation menu">&times;</button>
   </div>
@@ -24,28 +24,28 @@
     </a>
 
     <a
-      routerLink="/doctors"
+      routerLink="/employees"
       routerLinkActive="active"
       [routerLinkActiveOptions]="{ exact: true }"
       class="nav-link"
       (click)="close()"
     >
-      Doctors
+      Employees
     </a>
 
     <a
-      routerLink="/doctors/add"
+      routerLink="/employees/add"
       routerLinkActive="active"
       class="nav-link"
       (click)="close()"
     >
-      + Add Doctor
+      + Add Employee
     </a>
 
   </nav>
 
   <div class="sidebar-footer">
-    Doctor Management
+    Employee Management System
   </div>
 
 </aside>

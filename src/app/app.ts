@@ -10,7 +10,7 @@ import { Navbar } from './shared/components/navbar/navbar';
   templateUrl: './app.html',
 })
 export class App {
-  protected readonly title = signal('doctor-management');
+  protected readonly title = signal('employee-management');
   protected readonly isSidebarOpen = signal(false);
 
   toggleSidebar(): void {
