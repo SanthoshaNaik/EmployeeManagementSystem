@@ -1,0 +1,31 @@
+1. Component Creation
+    1. Verify that the EmployeeForm component is created successfully.
+
+2. Form Validation
+    2. Verify that all required fields are validated.
+    3. Verify that the employee name rejects numeric digits.
+    4. Verify that invalid email formats are rejected.
+    5. Verify that valid email formats are accepted.
+    6. Verify that employee codes follow the required validation rules.
+    7. Verify that duplicate employee codes are rejected.
+    8. Verify that duplicate email addresses are rejected.
+    3. Form Submission Validation
+    9. Verify that all form controls are marked as touched when submitting an invalid form.
+    10. Verify that an invalid form cannot be submitted.
+
+4. Create Employee
+    11. Verify that a new employee is created successfully.
+    12. Verify that employee data is normalized before submission.
+    13. Verify that employee creation errors are handled correctly.
+    5. Update Employee
+    14. Verify that an existing employee is updated successfully.
+    15. Verify that employee update errors are handled correctly.
+
+
+6. Load Employee Details
+    16. Verify that employee details are loaded and populated in the form successfully.
+    17. Verify that errors are handled when employee details fail to load.
+
+
+7. Cancel Functionality
+    18. Verify that clicking Cancel navigates to the employee list.

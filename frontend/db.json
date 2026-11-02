@@ -1,0 +1,55 @@
+{
+  "employees": [
+    {
+      "id": "URMhJpWC-hs",
+      "EmployeeCode": "EMP101",
+      "FullName": "Ram",
+      "Email": "ram@gmail.com",
+      "Department": "Human Resources",
+      "Designation": "HR",
+      "JoiningDate": "2026-10-30",
+      "ActiveStatus": false
+    },
+    {
+      "id": "mUleBDi2xkk",
+      "EmployeeCode": "EMP105",
+      "FullName": "Santhosh Naik",
+      "Email": "santhoshanaik02@gmail.com",
+      "Department": "Human Resources",
+      "Designation": "SWE",
+      "JoiningDate": "2026-10-29",
+      "ActiveStatus": true
+    },
+    {
+      "id": "oEsDz8GjxSA",
+      "EmployeeCode": "EMP106",
+      "FullName": "Kiran raj",
+      "Email": "kiran@gmail.com",
+      "Department": "Information Technology",
+      "Designation": "software Engineer",
+      "JoiningDate": "2026-10-14",
+      "ActiveStatus": true
+    },
+    {
+      "id": "-7IUBQoIj5M",
+      "EmployeeCode": "EMP109",
+      "FullName": "sanj",
+      "Email": "santhoshanaik@gmail.com",
+      "Department": "Information Technology",
+      "Designation": "SWE",
+      "JoiningDate": "2026-10-21",
+      "ActiveStatus": true
+    },
+    {
+      "id": "IcrqtdH40L4",
+      "EmployeeCode": "EMP102",
+      "FullName": "jun",
+      "Email": "smith@gidl.com",
+      "Department": "Human Resources",
+      "Designation": "D",
+      "JoiningDate": "2026-10-30",
+      "ActiveStatus": true
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

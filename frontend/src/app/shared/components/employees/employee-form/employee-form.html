@@ -1,0 +1,270 @@
+<!-- Santhosh Naik -->
+
+<section class="employee-form-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1>{{ isEditMode ? 'Edit Employee' : 'Add New Employee' }}</h1>
+     
+    
+    </div>
+
+    <a routerLink="/employees" class="back-link">
+      &larr; Back to Employees
+    </a>
+  </header>
+
+  <!-- Loading State Indicator when fetching data for Edit -->
+  @if (isLoading) {
+    <div class="loading-box">
+      <div class="spinner"></div>
+      <p>Loading employee information...</p>
+    </div>
+  }
+
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+    @if (errorMessage) {
+      <div class="popup-message popup-error" role="alert">
+        <div class="popup-icon">&#9888;</div>
+        <div class="popup-content">
+          <h4 class="popup-title">Unable to Save</h4>
+          <p class="popup-text">{{ errorMessage }}</p>
+        </div>
+        <button type="button" class="popup-close" (click)="clearErrorMessage()" aria-label="Close popup">&times;</button>
+      </div>
+    }
+  </div>
+
+  <!-- Main Employee Form -->
+  @if (!isLoading) {
+    <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="form-container" novalidate>
+
+      <!-- Section 1: Basic Information -->
+      <div class="form-card">
+        <div class="card-heading">
+          <div class="step-badge">1</div>
+          <div>
+            <h2>Identification & Contact</h2>
+            <p>Enter the employee's unique code, full name, and email address.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Employee Code -->
+          <div class="form-group">
+            <label for="employeeCode">
+              Employee Code <span class="required">*</span>
+            </label>
+            <input
+              id="employeeCode"
+              type="text"
+              formControlName="employeeCode"
+              placeholder="e.g. EMP001"
+              autocomplete="off"
+              [class.input-error]="isFieldInvalid('employeeCode')"
+            />
+            @if (isFieldInvalid('employeeCode')) {
+              <small class="error-text">
+                @if (employeeForm.get('employeeCode')?.hasError('required')) {
+                  Employee Code is required.
+                } @else if (employeeForm.get('employeeCode')?.hasError('minlength')) {
+                  Employee Code must be at least 3 characters.
+                } @else if (employeeForm.get('employeeCode')?.hasError('maxlength')) {
+                  Employee Code cannot exceed 10 characters.
+                } @else if (employeeForm.get('employeeCode')?.hasError('codeSpaces')) {
+                  Employee Code cannot contain spaces.
+                } @else if (employeeForm.get('employeeCode')?.hasError('missingDigit')) {
+                  Employee Code must contain at least one digit (e.g. EMP001).
+                } @else if (employeeForm.get('employeeCode')?.hasError('codeTaken')) {
+                  This Employee Code is already in use by another employee.
+                } @else if (employeeForm.get('employeeCode')?.hasError('pattern')) {
+                  Only letters, numbers, hyphens, and underscores are allowed.
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Full Name -->
+          <div class="form-group">
+            <label for="fullName">
+              Full Name <span class="required">*</span>
+            </label>
+            <input
+              id="fullName"
+              type="text"
+              formControlName="fullName"
+              placeholder="e.g. John Doe"
+              autocomplete="name"
+              [class.input-error]="isFieldInvalid('fullName')"
+            />
+            @if (isFieldInvalid('fullName')) {
+              <small class="error-text">
+                @if (employeeForm.get('fullName')?.hasError('required')) {
+                  Full Name is required.
+                } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
+                  Full Name must be at least 3 characters.
+                } @else if (employeeForm.get('fullName')?.hasError('hasNumbers')) {
+                  Full Name cannot contain numbers.
+                } @else if (employeeForm.get('fullName')?.hasError('invalidCharacters') || employeeForm.get('fullName')?.hasError('pattern')) {
+                  Only letters, spaces, dots, and hyphens are allowed.
+                }
+              </small>
+            }
+          </div>
+
+          <!-- Email Address -->
+          <div class="form-group full-row">
+            <label for="email">
+              Corporate Email Address <span class="required">*</span>
+            </label>
+            <input
+              id="email"
+              type="email"
+              formControlName="email"
+              placeholder="e.g. john.doe@company.com"
+              autocomplete="email"
+              [class.input-error]="isFieldInvalid('email')"
+            />
+            @if (isFieldInvalid('email')) {
+              <small class="error-text">
+                @if (employeeForm.get('email')?.hasError('required')) {
+                  Corporate Email is required.
+                } @else if (employeeForm.get('email')?.hasError('emailSpaces')) {
+                  Email address cannot contain spaces.
+                } @else if (employeeForm.get('email')?.hasError('emailTaken')) {
+                  This email address is already registered to another employee.
+                } @else if (employeeForm.get('email')?.hasError('invalidEmailFormat') || employeeForm.get('email')?.hasError('email')) {
+                  Please enter a valid email address (e.g. name&#64;company.com with a valid domain like .com, .org).
+                }
+              </small>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Section 2: Department & Role -->
+      <div class="form-card">
+        <div class="card-heading">
+          <div class="step-badge">2</div>
+          <div>
+            <h2>Employment Details</h2>
+            <p>Specify the department, designation, and starting date.</p>
+          </div>
+        </div>
+
+        <div class="form-grid">
+          <!-- Department -->
+          <div class="form-group">
+            <label for="department">
+              Department <span class="required">*</span>
+            </label>
+            <select
+              id="department"
+              formControlName="department"
+              [class.input-error]="isFieldInvalid('department')"
+            >
+              <option value="">-- Select Department --</option>
+              @for (dept of departments; track dept) {
+                <option [value]="dept">{{ dept }}</option>
+              }
+            </select>
+            @if (isFieldInvalid('department')) {
+              <small class="error-text">
+                Department selection is required.
+              </small>
+            }
+          </div>
+
+          <!-- Designation -->
+          <div class="form-group">
+            <label for="designation">
+              Designation / Role <span class="required">*</span>
+            </label>
+            <input
+              id="designation"
+              type="text"
+              formControlName="designation"
+              placeholder="e.g. Senior Software Engineer"
+              [class.input-error]="isFieldInvalid('designation')"
+            />
+            @if (isFieldInvalid('designation')) {
+              <small class="error-text">
+                Designation is required.
+              </small>
+            }
+          </div>
+
+          <!-- Joining Date -->
+          <div class="form-group">
+            <label for="joiningDate">
+              Date of Joining <span class="required">*</span>
+            </label>
+            <input
+              id="joiningDate"
+              type="date"
+              formControlName="joiningDate"
+              [class.input-error]="isFieldInvalid('joiningDate')"
+            />
+            @if (isFieldInvalid('joiningDate')) {
+              <small class="error-text">
+                Joining Date is required.
+              </small>
+            }
+          </div>
+
+          <!-- Employment Status -->
+          <div class="form-group">
+            <label for="isActive">
+              Employment Status <span class="required">*</span>
+            </label>
+            <select
+              id="isActive"
+              formControlName="isActive"
+              [class.input-error]="isFieldInvalid('isActive')"
+            >
+              <option value="" disabled>-- Select Status --</option>
+              <option [ngValue]="true">Active</option>
+              <option [ngValue]="false">Inactive</option>
+            </select>
+            @if (isFieldInvalid('isActive')) {
+              <small class="error-text">
+                Employment Status is required.
+              </small>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button
+          type="button"
+          class="btn-cancel"
+          (click)="cancel()"
+          [disabled]="isSubmitting"
+        >
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn-submit"
+          [disabled]="isSubmitting"
+        >
+          @if (isSubmitting) {
+            <span>Saving employee...</span>
+          } @else if (isEditMode) {
+            <span>Update Employee</span>
+          } @else {
+            <span>Add Employee</span>
+          }
+        </button>
+      </div>
+
+    </form>
+  }
+
+</section>
+

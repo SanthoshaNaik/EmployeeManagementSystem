@@ -1,0 +1,459 @@
+
+<!-- Dipul Raj -->
+
+<section class="employee-page">
+
+  <!-- Page Header -->
+  <header class="page-header">
+    <div>
+      <h1>Employees</h1>
+    </div>
+
+    <a routerLink="/employees/add" class="add-button">
+      + Add Employee
+    </a>
+  </header>
+
+  <!-- Popup Notification Messages -->
+  <div class="popup-container">
+
+    @if (successMessage) {
+      <div class="popup-message popup-success" role="status">
+
+        <div class="popup-icon">&#10003;</div>
+
+        <div class="popup-content">
+          <h4 class="popup-title">Success</h4>
+          <p class="popup-text">{{ successMessage }}</p>
+        </div>
+
+        <button
+          type="button"
+          class="popup-close"
+          (click)="clearSuccessMessage()"
+          aria-label="Close popup">
+          &times;
+        </button>
+
+      </div>
+    }
+
+    @if (errorMessage) {
+      <div class="popup-message popup-error" role="alert">
+
+        <div class="popup-icon">&#9888;</div>
+
+        <div class="popup-content">
+          <h4 class="popup-title">Error</h4>
+          <p class="popup-text">{{ errorMessage }}</p>
+
+          <button
+            type="button"
+            class="popup-action-btn"
+            (click)="fetchEmployees()">
+            Retry
+          </button>
+        </div>
+
+        <button
+          type="button"
+          class="popup-close"
+          (click)="clearErrorMessage()"
+          aria-label="Close popup">
+          &times;
+        </button>
+
+      </div>
+    }
+
+  </div>
+
+  <!-- Search & Filter Controls -->
+  <div class="content-card">
+
+    <div class="filter-bar">
+
+      <!-- Search -->
+      <div class="search-field">
+        <input
+          type="text"
+          placeholder="Search by name, employee code (e.g. EMP001)"
+          [(ngModel)]="searchTerm"
+          class="search-input"
+          aria-label="Search employees"
+        />
+      </div>
+
+      <!-- Filters -->
+      <div class="filter-group">
+
+        <select
+          [(ngModel)]="selectedDepartment"
+          class="filter-select"
+          aria-label="Filter by department">
+
+          <option value="">All Departments</option>
+
+          @for (dept of departments; track dept) {
+            <option [value]="dept">{{ dept }}</option>
+          }
+
+        </select>
+
+        <select
+          [(ngModel)]="selectedStatus"
+          class="filter-select"
+          aria-label="Filter by employment status">
+
+          <option value="">All Statuses</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+
+        </select>
+
+      </div>
+
+    </div>
+
+    <!-- Employee Table -->
+    <div class="table-container">
+
+      <table>
+
+        <thead>
+          <tr>
+            <th>Employee Code</th>
+            <th>Full Name</th>
+            <th>Email</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Joining Date</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          @for (
+            emp of (employees | search: searchTerm : selectedDepartment : selectedStatus);
+            track $index
+          ) {
+
+            <tr>
+
+              <!-- Employee Code -->
+              <td>
+                <span class="emp-code-badge">
+                  {{ emp.EmployeeCode }}
+                </span>
+              </td>
+
+              <!-- Full Name -->
+              <td>
+                <strong class="emp-name">
+                  {{ emp.FullName }}
+                </strong>
+              </td>
+
+              <!-- Email -->
+              <td>
+                <span class="emp-email">
+                  {{ emp.Email }}
+                </span>
+              </td>
+
+              <!-- Department -->
+              <td>{{ emp.Department }}</td>
+
+              <!-- Designation -->
+              <td>{{ emp.Designation }}</td>
+
+              <!-- Joining Date -->
+              <td>{{ emp.JoiningDate }}</td>
+
+              <!-- Status -->
+              <td>
+                <span
+                  class="status-pill"
+                  [class.active]="emp.ActiveStatus"
+                  [class.inactive]="!emp.ActiveStatus">
+
+                  {{ emp.ActiveStatus ? 'Active' : 'Inactive' }}
+
+                </span>
+              </td>
+
+              <!-- Actions -->
+              <td>
+
+                <div class="actions-wrapper">
+
+                  <!-- View -->
+                  <button
+                    type="button"
+                    class="btn btn-view"
+                    (click)="openViewModal(emp)"
+                    title="View Details">
+                    View
+                  </button>
+
+                  <!-- Edit -->
+                  <a
+                    class="btn btn-edit"
+                    [routerLink]="[
+                      '/employees/edit',
+                      getEmployeeId(emp)
+                    ]"
+                    title="Edit Employee">
+                    Edit
+                  </a>
+
+                  <!-- Delete -->
+                  <button
+                    type="button"
+                    class="btn btn-delete"
+                    (click)="openDeleteModal(emp)"
+                    [disabled]="deletingEmployeeId === getEmployeeId(emp)"
+                    title="Delete Employee">
+
+                    {{
+                      deletingEmployeeId === getEmployeeId(emp)
+                        ? 'Deleting...'
+                        : 'Delete'
+                    }}
+
+                  </button>
+
+                </div>
+
+              </td>
+
+            </tr>
+
+          } @empty {
+
+            <tr>
+              <td colspan="8" class="empty-state-cell">
+
+                <div class="empty-box">
+                  <p class="empty-title">No employees found</p>
+                </div>
+
+              </td>
+            </tr>
+
+          }
+
+        </tbody>
+
+      </table>
+
+    </div>
+
+    <!-- Table Footer -->
+    <footer class="table-footer">
+
+      <span>
+        Showing {{ filteredEmployees.length }}
+        of {{ employees.length }} employees
+      </span>
+
+    </footer>
+
+  </div>
+
+  <!-- View Employee Details Modal -->
+  @if (selectedEmployee) {
+
+    <div
+      class="modal-backdrop"
+      (click)="closeViewModal()">
+
+      <div
+        class="modal-card"
+        (click)="$event.stopPropagation()">
+
+        <!-- Modal Header -->
+        <div class="modal-header">
+
+          <div>
+            <h2>{{ selectedEmployee.FullName }}</h2>
+
+            <span class="emp-code-badge">
+              {{ selectedEmployee.EmployeeCode }}
+            </span>
+          </div>
+
+          <button
+            type="button"
+            class="close-modal-btn"
+            (click)="closeViewModal()"
+            aria-label="Close modal">
+            &times;
+          </button>
+
+        </div>
+
+        <!-- Modal Body -->
+        <div class="modal-body">
+
+          <div class="detail-item">
+            <span class="detail-label">Department</span>
+            <span class="detail-value">
+              {{ selectedEmployee.Department }}
+            </span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Designation</span>
+            <span class="detail-value">
+              {{ selectedEmployee.Designation }}
+            </span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Corporate Email</span>
+            <span class="detail-value">
+              {{ selectedEmployee.Email }}
+            </span>
+          </div>
+
+          <div class="detail-item">
+            <span class="detail-label">Date of Joining</span>
+            <span class="detail-value">
+              {{ selectedEmployee.JoiningDate }}
+            </span>
+          </div>
+
+          <div class="detail-item full-width">
+
+            <span class="detail-label">
+              Employment Status
+            </span>
+
+            <div>
+              <span
+                class="status-pill"
+                [class.active]="selectedEmployee.ActiveStatus"
+                [class.inactive]="!selectedEmployee.ActiveStatus">
+
+                {{
+                  selectedEmployee.ActiveStatus
+                    ? 'Active Employment'
+                    : 'Inactive / Resigned'
+                }}
+
+              </span>
+            </div>
+
+          </div>
+
+        </div>
+
+        <!-- Modal Footer -->
+        <div class="modal-footer">
+
+          <a
+            class="btn btn-edit"
+            [routerLink]="[
+              '/employees/edit',
+              getEmployeeId(selectedEmployee)
+            ]"
+            (click)="closeViewModal()">
+
+            Edit Profile
+
+          </a>
+
+          <button
+            type="button"
+            class="btn btn-secondary"
+            (click)="closeViewModal()">
+
+            Close
+
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+  <!-- Modern Delete Confirmation Modal -->
+  @if (employeeToDelete) {
+    <div
+      class="modal-backdrop"
+      (click)="closeDeleteModal()">
+
+      <div
+        class="delete-modal-card"
+        (click)="$event.stopPropagation()"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="deleteDialogTitle">
+
+        <!-- Danger Icon -->
+        <div class="delete-modal-icon-wrapper">
+          <div class="delete-modal-icon" aria-hidden="true">
+            <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M3 6h18"></path>
+              <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path>
+              <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path>
+              <line x1="10" y1="11" x2="10" y2="17"></line>
+              <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+          </div>
+        </div>
+
+        <!-- Modal Text & Employee Info -->
+        <div class="delete-modal-content">
+          <h3 id="deleteDialogTitle" class="delete-modal-title">Delete Employee</h3>
+          <p class="delete-modal-desc">
+            Are you sure you want to permanently delete this employee? This action cannot be undone.
+          </p>
+
+          <div class="delete-target-preview">
+            <div class="delete-target-avatar">
+              {{ (employeeToDelete.FullName || '').slice(0, 2).toUpperCase() }}
+            </div>
+            <div class="delete-target-info">
+              <span class="delete-target-name">{{ employeeToDelete.FullName }}</span>
+              <div class="delete-target-meta">
+                <span class="emp-code-badge">{{ employeeToDelete.EmployeeCode }}</span>
+                <span>{{ employeeToDelete.Department }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modal Actions -->
+        <div class="delete-modal-actions">
+          <button
+            type="button"
+            class="btn btn-secondary delete-cancel-btn"
+            (click)="closeDeleteModal()"
+            [disabled]="deletingEmployeeId !== null">
+            Cancel
+          </button>
+          <button
+            type="button"
+            class="btn btn-danger delete-confirm-btn"
+            (click)="executeDelete()"
+            [disabled]="deletingEmployeeId !== null">
+            @if (deletingEmployeeId !== null) {
+              <span class="btn-spinner"></span> Deleting...
+            } @else {
+              Yes, Delete
+            }
+          </button>
+        </div>
+
+      </div>
+    </div>
+  }
+
+</section>
