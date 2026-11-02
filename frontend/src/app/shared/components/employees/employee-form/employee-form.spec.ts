@@ -95,6 +95,18 @@ describe('EmployeeForm Component', () => {
   afterEach(() => {
     component?.clearErrorMessage();
   });
+  it('should automatically set ActiveStatus to true when adding a new employee', () => {
+    const createSpy = vi.spyOn(employeeService, 'createEmployee');
+
+    fillForm();
+    component.onSubmit();
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ActiveStatus: true
+      })
+    );
+  });
 
   // 1. COMPONENT CREATION
 
@@ -124,8 +136,42 @@ describe('EmployeeForm Component', () => {
     name.setValue('Al');
     expect(name.hasError('minlength')).toBe(true);
 
+    name.setValue('John Doe ');
+    expect(name.hasError('trailingSpace')).toBe(true);
+
     name.setValue('John Doe');
     expect(name.valid).toBe(true);
+  });
+
+  it('should validate designation and reject trailing space', () => {
+    const designation = component.employeeForm.controls['designation'];
+
+    designation.setValue('Engineer ');
+    expect(designation.hasError('trailingSpace')).toBe(true);
+
+    designation.setValue('Engineer');
+    expect(designation.valid).toBe(true);
+  });
+
+  it('should validate joining date and reject future dates', () => {
+    const joiningDate = component.employeeForm.controls['joiningDate'];
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const futureDateStr = `${yyyy}-${mm}-${dd}`;
+
+    joiningDate.setValue(futureDateStr);
+    expect(joiningDate.hasError('futureDate')).toBe(true);
+
+    const todayStr = component.maxDate;
+    joiningDate.setValue(todayStr);
+    expect(joiningDate.hasError('futureDate')).toBe(false);
+
+    joiningDate.setValue('2023-01-10');
+    expect(joiningDate.valid).toBe(true);
   });
 
   it('should reject invalid email', () => {
@@ -218,15 +264,28 @@ describe('EmployeeForm Component', () => {
     expect(navigateSpy).toHaveBeenCalled();
   });
 
+  it('should automatically set ActiveStatus to true when adding a new employee', () => {
+    const createSpy = vi.spyOn(employeeService, 'createEmployee');
+
+    fillForm();
+    component.onSubmit();
+
+    expect(createSpy).toHaveBeenCalledWith(
+      expect.objectContaining({
+        ActiveStatus: true
+      })
+    );
+  });
+
   it('should normalize employee data before saving', () => {
     const createSpy = vi.spyOn(employeeService, 'createEmployee');
 
     fillForm({
       ...validForm,
       employeeCode: 'emp006',
-      fullName: '  Jim Halpert  ',
+      fullName: 'Jim Halpert',
       email: 'JIM.H@COMPANY.COM',
-      designation: '  Sales Representative  '
+      designation: 'Sales Representative'
     });
 
     component.onSubmit();

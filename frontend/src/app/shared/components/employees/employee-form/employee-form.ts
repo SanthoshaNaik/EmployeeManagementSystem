@@ -22,6 +22,14 @@ export class EmployeeForm implements OnInit {
 
   departments = DEPARTMENTS;
 
+  get maxDate(): string {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  }
+
   isEditMode = false;
   employeeId: any = null;
   existingEmployees: Employee[] = [];
@@ -53,15 +61,22 @@ export class EmployeeForm implements OnInit {
     
     department: ['', [Validators.required]],
 
-    designation: ['',
-       [
-                    Validators.required,
-                   this.validateFullName.bind(this)
-       ]
+    designation: [
+      '',
+      [
+        Validators.required,
+        this.validateDesignation.bind(this)
+      ]
     ],
 
-    joiningDate: ['', [Validators.required]],
-    isActive: ['', [Validators.required]]
+    joiningDate: [
+      '',
+      [
+        Validators.required,
+        this.validateJoiningDate.bind(this)
+      ]
+    ],
+    isActive: [true, [Validators.required]]
   });
 
   ngOnInit(): void {
@@ -167,6 +182,11 @@ export class EmployeeForm implements OnInit {
       return null;
     }
 
+    // Do not accept space at the end
+    if (/\s$/.test(String(value))) {
+      return { trailingSpace: true };
+    }
+
     const name = String(value).trim();
 
     // Do not accept numerics (numbers)
@@ -176,6 +196,33 @@ export class EmployeeForm implements OnInit {
 
     // Only allow letters, spaces, hyphens, and dots
     if (!/^[A-Za-z\s.'-]+$/.test(name)) {
+      return { invalidCharacters: true };
+    }
+
+    return null;
+  }
+
+  validateDesignation(control: AbstractControl) {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    // Do not accept space at the end
+    if (/\s$/.test(String(value))) {
+      return { trailingSpace: true };
+    }
+
+    const designation = String(value).trim();
+
+    // Do not accept numerics (numbers)
+    if (/\d/.test(designation)) {
+      return { hasNumbers: true };
+    }
+
+    // Only allow letters, spaces, hyphens, and dots
+    if (!/^[A-Za-z\s.'-]+$/.test(designation)) {
       return { invalidCharacters: true };
     }
 
@@ -228,6 +275,23 @@ export class EmployeeForm implements OnInit {
 
     if (isDuplicate) {
       return { emailTaken: true, email: true };
+    }
+
+    return null;
+  }
+
+  validateJoiningDate(control: AbstractControl) {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    const todayStr = this.maxDate;
+    const inputDate = String(value).split('T')[0];
+
+    if (inputDate > todayStr) {
+      return { futureDate: true };
     }
 
     return null;
@@ -294,9 +358,9 @@ export class EmployeeForm implements OnInit {
       Department: formValues.department,
       Designation: formValues.designation.trim(),
       JoiningDate: formValues.joiningDate,
-      ActiveStatus:
-        formValues.isActive === true ||
-        formValues.isActive === 'true'
+      ActiveStatus: this.isEditMode
+        ? (formValues.isActive === true || formValues.isActive === 'true')
+        : true
     };
 
     if (this.isEditMode && this.employeeId) {

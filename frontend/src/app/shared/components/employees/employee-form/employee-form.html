@@ -105,6 +105,8 @@
                   Full Name is required.
                 } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
                   Full Name must be at least 3 characters.
+                } @else if (employeeForm.get('fullName')?.hasError('trailingSpace')) {
+                  Full Name cannot end with a space.
                 } @else if (employeeForm.get('fullName')?.hasError('hasNumbers')) {
                   Full Name cannot contain numbers.
                 } @else if (employeeForm.get('fullName')?.hasError('invalidCharacters') || employeeForm.get('fullName')?.hasError('pattern')) {
@@ -133,7 +135,8 @@
                   Corporate Email is required.
                 } @else if (employeeForm.get('email')?.hasError('emailSpaces')) {
                   Email address cannot contain spaces.
-                } @else if (employeeForm.get('email')?.hasError('emailTaken')) {
+                }
+                 @else if (employeeForm.get('email')?.hasError('emailTaken')) {
                   This email address is already registered to another employee.
                 } @else if (employeeForm.get('email')?.hasError('invalidEmailFormat') || employeeForm.get('email')?.hasError('email')) {
                   Please enter a valid email address (e.g. name&#64;company.com with a valid domain like .com, .org).
@@ -191,7 +194,15 @@
             />
             @if (isFieldInvalid('designation')) {
               <small class="error-text">
-                Designation is required.
+                @if (employeeForm.get('designation')?.hasError('required')) {
+                  Designation / Role is required.
+                } @else if (employeeForm.get('designation')?.hasError('trailingSpace')) {
+                  Designation / Role cannot end with a space.
+                } @else if (employeeForm.get('designation')?.hasError('hasNumbers')) {
+                  Designation / Role cannot contain numbers.
+                } @else if (employeeForm.get('designation')?.hasError('invalidCharacters')) {
+                  Only letters, spaces, dots, and hyphens are allowed.
+                }
               </small>
             }
           </div>
@@ -205,35 +216,21 @@
               id="joiningDate"
               type="date"
               formControlName="joiningDate"
+              [max]="maxDate"
               [class.input-error]="isFieldInvalid('joiningDate')"
             />
             @if (isFieldInvalid('joiningDate')) {
               <small class="error-text">
-                Joining Date is required.
+                @if (employeeForm.get('joiningDate')?.hasError('required')) {
+                  Date of Joining is required.
+                } @else if (employeeForm.get('joiningDate')?.hasError('futureDate')) {
+                  Date of Joining cannot be in the future.
+                }
               </small>
             }
           </div>
 
-          <!-- Employment Status -->
-          <div class="form-group">
-            <label for="isActive">
-              Employment Status <span class="required">*</span>
-            </label>
-            <select
-              id="isActive"
-              formControlName="isActive"
-              [class.input-error]="isFieldInvalid('isActive')"
-            >
-              <option value="" disabled>-- Select Status --</option>
-              <option [ngValue]="true">Active</option>
-              <option [ngValue]="false">Inactive</option>
-            </select>
-            @if (isFieldInvalid('isActive')) {
-              <small class="error-text">
-                Employment Status is required.
-              </small>
-            }
-          </div>
+          
         </div>
       </div>
 
@@ -251,7 +248,7 @@
         <button
           type="submit"
           class="btn-submit"
-          [disabled]="isSubmitting"
+          [disabled]="isSubmitting || isLoading"
         >
           @if (isSubmitting) {
             <span>Saving employee...</span>
