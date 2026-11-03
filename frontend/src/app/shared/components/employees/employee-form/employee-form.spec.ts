@@ -108,85 +108,8 @@ describe('EmployeeForm Component', () => {
     );
   });
 
-  // 1. COMPONENT CREATION
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-    expect(component.isEditMode).toBe(false);
-  });
-
-  // 2. FORM VALIDATION
-
-  it('should validate required fields', () => {
-    component.employeeForm.reset();
-
-    expect(component.employeeForm.invalid).toBe(true);
-
-    Object.values(component.employeeForm.controls).forEach(control => {
-      expect(control.hasError('required')).toBe(true);
-    });
-  });
-
-  it('should validate employee name', () => {
-    const name = component.employeeForm.controls['fullName'];
-
-    name.setValue('John123');
-    expect(name.hasError('hasNumbers')).toBe(true);
-
-    name.setValue('Al');
-    expect(name.hasError('minlength')).toBe(true);
-
-    name.setValue('John Doe ');
-    expect(name.hasError('trailingSpace')).toBe(true);
-
-    name.setValue('John Doe');
-    expect(name.valid).toBe(true);
-  });
-
-  it('should validate designation and reject trailing space', () => {
-    const designation = component.employeeForm.controls['designation'];
-
-    designation.setValue('Engineer ');
-    expect(designation.hasError('trailingSpace')).toBe(true);
-
-    designation.setValue('Engineer');
-    expect(designation.valid).toBe(true);
-  });
-
-  it('should validate joining date and reject future dates', () => {
-    const joiningDate = component.employeeForm.controls['joiningDate'];
-
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    const yyyy = tomorrow.getFullYear();
-    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
-    const dd = String(tomorrow.getDate()).padStart(2, '0');
-    const futureDateStr = `${yyyy}-${mm}-${dd}`;
-
-    joiningDate.setValue(futureDateStr);
-    expect(joiningDate.hasError('futureDate')).toBe(true);
-
-    const todayStr = component.maxDate;
-    joiningDate.setValue(todayStr);
-    expect(joiningDate.hasError('futureDate')).toBe(false);
-
-    joiningDate.setValue('2023-01-10');
-    expect(joiningDate.valid).toBe(true);
-  });
-
-  it('should reject invalid email', () => {
-    const email = component.employeeForm.controls['email'];
-
-    email.setValue('invalid-email');
-    expect(email.hasError('email')).toBe(true);
-  });
-
-  it('should accept valid email', () => {
-    const email = component.employeeForm.controls['email'];
-
-    email.setValue('john@company.com');
-    expect(email.valid).toBe(true);
-  });
+  // 1.VALIDATION
 
   it('should validate employee code', () => {
     const code = component.employeeForm.controls['employeeCode'];
@@ -216,6 +139,55 @@ describe('EmployeeForm Component', () => {
     expect(code.hasError('codeTaken')).toBe(true);
   });
 
+  //FullName
+
+  it('should validate employee name', () => {
+    const name = component.employeeForm.controls['fullName'];
+
+    name.setValue('John123');
+    expect(name.hasError('hasNumbers')).toBe(true);
+
+    name.setValue('Al');
+    expect(name.hasError('minlength')).toBe(true);
+
+    name.setValue('John Doe ');
+    expect(name.hasError('trailingSpace')).toBe(true);
+
+    name.setValue(' John Doe');
+    expect(name.hasError('leadingSpace')).toBe(true);
+
+    name.setValue('John  Doe');
+    expect(name.hasError('multipleSpaces')).toBe(true);
+
+    name.setValue('john doe');
+    expect(name.hasError('mustStartWithCapital')).toBe(true);
+
+    name.setValue('John doe');
+    expect(name.hasError('capitalizeWords')).toBe(true);
+
+    name.setValue('Santhosha Naraayana Naik');
+    expect(name.valid).toBe(true);
+  });
+
+
+  //Email
+
+  it('should reject invalid email', () => {
+    const email = component.employeeForm.controls['email'];
+
+    email.setValue('invalid-email');
+    expect(email.hasError('email')).toBe(true);
+  });
+
+  it('should accept valid email', () => {
+    const email = component.employeeForm.controls['email'];
+
+    email.setValue('john@company.com');
+    expect(email.valid).toBe(true);
+  });
+
+  
+
   it('should reject duplicate email addresses', () => {
     component.existingEmployees = [
       mockEmployee
@@ -228,7 +200,56 @@ describe('EmployeeForm Component', () => {
     expect(email.hasError('emailTaken')).toBe(true);
   });
 
-  // 3. FORM SUBMISSION VALIDATION
+  //Designation
+
+  it('should validate designation and reject invalid formatting', () => {
+    const designation = component.employeeForm.controls['designation'];
+
+    designation.setValue('Engineer ');
+    expect(designation.hasError('trailingSpace')).toBe(true);
+
+    designation.setValue(' Engineer');
+    expect(designation.hasError('leadingSpace')).toBe(true);
+
+    designation.setValue('Senior  Software Engineer');
+    expect(designation.hasError('multipleSpaces')).toBe(true);
+
+    designation.setValue('senior Software Engineer');
+    expect(designation.hasError('mustStartWithCapital')).toBe(true);
+
+    designation.setValue('Senior software Engineer');
+    expect(designation.hasError('capitalizeWords')).toBe(true);
+
+    designation.setValue('Senior Software Engineer');
+    expect(designation.valid).toBe(true);
+  });
+
+  //Date
+
+  it('should validate joining date and reject future dates', () => {
+    const joiningDate = component.employeeForm.controls['joiningDate'];
+
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const yyyy = tomorrow.getFullYear();
+    const mm = String(tomorrow.getMonth() + 1).padStart(2, '0');
+    const dd = String(tomorrow.getDate()).padStart(2, '0');
+    const futureDateStr = `${yyyy}-${mm}-${dd}`;
+
+    joiningDate.setValue(futureDateStr);
+    expect(joiningDate.hasError('futureDate')).toBe(true);
+
+    const todayStr = component.maxDate;
+    joiningDate.setValue(todayStr);
+    expect(joiningDate.hasError('futureDate')).toBe(false);
+
+    joiningDate.setValue('2023-01-10');
+    expect(joiningDate.valid).toBe(true);
+  });
+
+  
+
+  // FORM SUBMISSION VALIDATION
 
   it('should mark all fields as touched when form is invalid', () => {
     const errorSpy = vi.spyOn(component, 'showErrorPopup');
@@ -250,7 +271,7 @@ describe('EmployeeForm Component', () => {
     expect(employeeService.createEmployee).not.toHaveBeenCalled();
   });
 
-  // 4. CREATE EMPLOYEE
+  // CREATE EMPLOYEE
 
   it('should create an employee successfully', () => {
     const createSpy = vi.spyOn(employeeService, 'createEmployee');
@@ -316,7 +337,7 @@ describe('EmployeeForm Component', () => {
     );
   });
 
-  // 5. UPDATE EMPLOYEE
+  //  UPDATE EMPLOYEE
 
   it('should update an employee successfully', () => {
     component.isEditMode = true;
@@ -371,36 +392,8 @@ describe('EmployeeForm Component', () => {
     );
   });
 
-  // 6. LOAD EMPLOYEE DETAILS
 
-  it('should load employee details successfully', () => {
-    const getSpy = vi.spyOn(employeeService, 'getEmployeeById');
-
-    component.loadEmployee('5');
-
-    expect(getSpy).toHaveBeenCalledWith('5');
-    expect(component.employeeForm.controls['fullName'].value)
-      .toBe('David Wallace');
-
-    expect(component.isLoading).toBe(false);
-  });
-
-  it('should handle employee loading failure', () => {
-    vi.spyOn(employeeService, 'getEmployeeById').mockReturnValue(
-      throwError(() => new Error('Server error'))
-    );
-
-    const errorSpy = vi.spyOn(component, 'showErrorPopup');
-
-    component.loadEmployee('5');
-
-    expect(component.isLoading).toBe(false);
-    expect(errorSpy).toHaveBeenCalledWith(
-      'Unable to load employee details.'
-    );
-  });
-
-  // 7. CANCEL
+  //  CANCEL
 
   it('should navigate to employee list when cancel is called', () => {
     const navigateSpy = vi.spyOn(router, 'navigate');

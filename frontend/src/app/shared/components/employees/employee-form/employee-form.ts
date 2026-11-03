@@ -176,54 +176,102 @@ export class EmployeeForm implements OnInit {
   }
 
   validateFullName(control: AbstractControl) {
-    const value = control.value;
+    const rawValue = control.value;
 
-    if (!value) {
+    if (!rawValue) {
       return null;
     }
 
-    // Do not accept space at the end
-    if (/\s$/.test(String(value))) {
+    const valueStr = String(rawValue);
+
+    // 1. Cannot start with a space
+    if (/^\s/.test(valueStr)) {
+      return { leadingSpace: true };
+    }
+
+    // 2. Cannot end with a space
+    if (/\s$/.test(valueStr)) {
       return { trailingSpace: true };
     }
 
-    const name = String(value).trim();
+    // 3. Only a single space between words (no multiple consecutive spaces)
+    if (/\s{2,}/.test(valueStr)) {
+      return { multipleSpaces: true };
+    }
 
-    // Do not accept numerics (numbers)
+    const name = valueStr.trim();
+
+    // 4. Do not accept numerics (numbers)
     if (/\d/.test(name)) {
       return { hasNumbers: true };
     }
 
-    // Only allow letters, spaces, hyphens, and dots
+    // 5. Only allow letters, spaces, hyphens, and dots
     if (!/^[A-Za-z\s.'-]+$/.test(name)) {
       return { invalidCharacters: true };
+    }
+
+    // 6. Must start with a capital letter
+    if (!/^[A-Z]/.test(name)) {
+      return { mustStartWithCapital: true };
+    }
+
+    // 7. Each word must start with a capital letter (e.g. Santhosha Naraayana Naik)
+    const words = name.split(/\s+/).filter(Boolean);
+    const hasUncapitalizedWord = words.some(w => !/^[A-Z]/.test(w));
+    if (hasUncapitalizedWord) {
+      return { capitalizeWords: true };
     }
 
     return null;
   }
 
   validateDesignation(control: AbstractControl) {
-    const value = control.value;
+    const rawValue = control.value;
 
-    if (!value) {
+    if (!rawValue) {
       return null;
     }
 
-    // Do not accept space at the end
-    if (/\s$/.test(String(value))) {
+    const valueStr = String(rawValue);
+
+    // 1. Cannot start with a space
+    if (/^\s/.test(valueStr)) {
+      return { leadingSpace: true };
+    }
+
+    // 2. Cannot end with a space
+    if (/\s$/.test(valueStr)) {
       return { trailingSpace: true };
     }
 
-    const designation = String(value).trim();
+    // 3. Only a single space between words (no multiple consecutive spaces)
+    if (/\s{2,}/.test(valueStr)) {
+      return { multipleSpaces: true };
+    }
 
-    // Do not accept numerics (numbers)
+    const designation = valueStr.trim();
+
+    // 4. Do not accept numerics (numbers)
     if (/\d/.test(designation)) {
       return { hasNumbers: true };
     }
 
-    // Only allow letters, spaces, hyphens, and dots
+    // 5. Only allow letters, spaces, hyphens, and dots
     if (!/^[A-Za-z\s.'-]+$/.test(designation)) {
       return { invalidCharacters: true };
+    }
+
+    // 6. Must start with a capital letter
+    if (!/^[A-Z]/.test(designation)) {
+      return { mustStartWithCapital: true };
+    }
+
+    // 7. Each word must start with a capital letter (e.g. Senior Software Engineer)
+    const words = designation.split(/\s+/).filter(Boolean);
+    const hasUncapitalizedWord = words.some(w => !/^[A-Z]/.test(w));
+    if (hasUncapitalizedWord) {
+      return { capitalizeWords: true };
     }
 
     return null;

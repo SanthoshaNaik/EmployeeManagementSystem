@@ -105,8 +105,16 @@
                   Full Name is required.
                 } @else if (employeeForm.get('fullName')?.hasError('minlength')) {
                   Full Name must be at least 3 characters.
+                } @else if (employeeForm.get('fullName')?.hasError('leadingSpace')) {
+                  Full Name cannot start with a space.
                 } @else if (employeeForm.get('fullName')?.hasError('trailingSpace')) {
                   Full Name cannot end with a space.
+                } @else if (employeeForm.get('fullName')?.hasError('multipleSpaces')) {
+                  Only a single space is allowed between words.
+                } @else if (employeeForm.get('fullName')?.hasError('mustStartWithCapital')) {
+                  Full Name must start with a capital letter.
+                } @else if (employeeForm.get('fullName')?.hasError('capitalizeWords')) {
+                  Each word must start with a capital letter (e.g. Ram Naik).
                 } @else if (employeeForm.get('fullName')?.hasError('hasNumbers')) {
                   Full Name cannot contain numbers.
                 } @else if (employeeForm.get('fullName')?.hasError('invalidCharacters') || employeeForm.get('fullName')?.hasError('pattern')) {
@@ -196,8 +204,16 @@
               <small class="error-text">
                 @if (employeeForm.get('designation')?.hasError('required')) {
                   Designation / Role is required.
+                } @else if (employeeForm.get('designation')?.hasError('leadingSpace')) {
+                  Designation / Role cannot start with a space.
                 } @else if (employeeForm.get('designation')?.hasError('trailingSpace')) {
                   Designation / Role cannot end with a space.
+                } @else if (employeeForm.get('designation')?.hasError('multipleSpaces')) {
+                  Only a single space is allowed between words.
+                } @else if (employeeForm.get('designation')?.hasError('mustStartWithCapital')) {
+                  Designation / Role must start with a capital letter.
+                } @else if (employeeForm.get('designation')?.hasError('capitalizeWords')) {
+                  Each word in Role must start with a capital letter (e.g. Senior Software Engineer).
                 } @else if (employeeForm.get('designation')?.hasError('hasNumbers')) {
                   Designation / Role cannot contain numbers.
                 } @else if (employeeForm.get('designation')?.hasError('invalidCharacters')) {

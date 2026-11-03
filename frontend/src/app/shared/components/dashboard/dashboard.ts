@@ -63,9 +63,9 @@ export class Dashboard implements OnInit {
     return this.employees.filter(e => e.ActiveStatus).length;
   }
 
-  get inactiveEmployees(): number {
-    return this.employees.filter(e => !e.ActiveStatus).length;
-  }
+  // get inactiveEmployees(): number {
+  //   return this.employees.filter(e => !e.ActiveStatus).length;
+  // }
 
   get departmentCount(): number {
     return new Set(this.employees.map(e => e.Department)).size;
